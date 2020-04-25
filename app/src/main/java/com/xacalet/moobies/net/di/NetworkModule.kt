@@ -1,4 +1,4 @@
-package com.xacalet.moobies.di
+package com.xacalet.moobies.net.di
 
 import dagger.Module
 import dagger.Provides

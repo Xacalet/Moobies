@@ -52,7 +52,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.7.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.7.0")
     implementation("com.google.android.material:material:1.1.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
     implementation("androidx.fragment:fragment-ktx:1.2.4")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -61,4 +61,7 @@ dependencies {
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("com.github.bumptech.glide:recyclerview-integration:4.11.0")
+    kapt("com.github.bumptech.glide:compiler:4.11.0")
 }

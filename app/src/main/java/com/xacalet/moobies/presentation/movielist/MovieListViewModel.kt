@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.usecase.GetPopularMoviesUseCase
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
@@ -14,7 +13,7 @@ class MovieListViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun getPopularMovies(): LiveData<List<Movie>> =
-        liveData(Dispatchers.IO) {
+        liveData {
             val list = getPopularMoviesUseCase.execute()
             emit(list)
         }

@@ -1,16 +1,17 @@
 package com.xacalet.moobies.presentation.movielist.di
 
-import com.xacalet.domain.usecase.GetPopularMoviesUseCase
-import com.xacalet.moobies.presentation.movielist.MovieListViewModelFactory
+import androidx.lifecycle.ViewModel
+import com.xacalet.moobies.di.ViewModelKey
+import com.xacalet.moobies.presentation.movielist.MovieListViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dagger.Reusable
+import dagger.multibindings.IntoMap
 
 @Module(subcomponents = [MovieListComponent::class])
-class MovieListModule {
+abstract class MovieListModule {
 
-    @Provides
-    @Reusable
-    fun getMovieListViewModelFactory(getPopularMoviesUseCase: GetPopularMoviesUseCase): MovieListViewModelFactory =
-        MovieListViewModelFactory(getPopularMoviesUseCase)
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieListViewModel::class)
+    abstract fun bindMovieListViewModel(viewModel: MovieListViewModel): ViewModel
 }

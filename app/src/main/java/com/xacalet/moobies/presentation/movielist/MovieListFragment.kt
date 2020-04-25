@@ -7,9 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.moobies.MoobiesApplication
 import com.xacalet.moobies.R
+import com.xacalet.moobies.di.ViewModelFactory
 import com.xacalet.moobies.presentation.movielist.di.MovieListComponent
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     private lateinit var adapter: MovieListAdapter
 
     @Inject
-    lateinit var viewModelFactory: MovieListViewModelFactory
+    lateinit var viewModelFactory: ViewModelFactory
 
     private val viewModel by viewModels<MovieListViewModel> { viewModelFactory }
 
@@ -42,7 +43,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         super.onViewCreated(view, savedInstanceState)
 
         movieListView.layoutManager = GridLayoutManager(view.context, 3)
-        adapter = MovieListAdapter(view.context)
+        adapter = MovieListAdapter(view.context, GetImageUrlUseCase())
         movieListView.adapter = adapter
 
         viewModel.getPopularMovies().observe(viewLifecycleOwner, Observer { movies ->

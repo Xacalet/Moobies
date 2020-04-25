@@ -1,6 +1,7 @@
 package com.xacalet.moobies.di
 
 import com.xacalet.moobies.MainActivity
+import com.xacalet.moobies.net.di.NetworkModule
 import com.xacalet.moobies.presentation.movielist.di.MovieListComponent
 import com.xacalet.moobies.presentation.movielist.di.MovieListModule
 import dagger.Component
@@ -11,9 +12,11 @@ import javax.inject.Singleton
  */
 @Component(
     modules = [
-        GeneralModule::class,
+        DataSourceModule::class,
+        RepositoryModule::class,
         NetworkModule::class,
-        MovieListModule::class
+        MovieListModule::class,
+        ViewModelModule::class
     ]
 )
 @Singleton
