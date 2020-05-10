@@ -2,6 +2,8 @@ package com.xacalet.moobies.di
 
 import com.xacalet.moobies.MainActivity
 import com.xacalet.moobies.net.di.NetworkModule
+import com.xacalet.moobies.presentation.moviedetails.di.MovieDetailsComponent
+import com.xacalet.moobies.presentation.moviedetails.di.MovieDetailsModule
 import com.xacalet.moobies.presentation.movielist.di.MovieListComponent
 import com.xacalet.moobies.presentation.movielist.di.MovieListModule
 import dagger.Component
@@ -16,6 +18,7 @@ import javax.inject.Singleton
         RepositoryModule::class,
         NetworkModule::class,
         MovieListModule::class,
+        MovieDetailsModule::class,
         ViewModelModule::class
     ]
 )
@@ -24,5 +27,7 @@ interface AppComponent {
 
     fun inject(activity: MainActivity)
 
-    fun loginComponent(): MovieListComponent.Factory
+    fun movieListComponent(): MovieListComponent.Factory
+
+    fun movieDetailsComponent(): MovieDetailsComponent.Factory
 }

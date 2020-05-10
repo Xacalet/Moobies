@@ -1,2 +1,2 @@
-include(":app", ":network", ":data", ":domain")
+include(":app", ":data", ":domain")
 rootProject.name = "Moobies"

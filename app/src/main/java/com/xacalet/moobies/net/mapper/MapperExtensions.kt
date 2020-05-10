@@ -2,10 +2,8 @@ package com.xacalet.moobies.net.mapper
 
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.Movie
-import com.xacalet.moobies.net.api.dto.GenreDto
-import com.xacalet.moobies.net.api.dto.GenresDto
-import com.xacalet.moobies.net.api.dto.MovieDto
-import com.xacalet.moobies.net.api.dto.PaginatedResultDto
+import com.xacalet.domain.model.MovieDetails
+import com.xacalet.moobies.net.api.dto.*
 import java.time.LocalDate
 import java.time.LocalDate.parse
 import java.time.format.DateTimeFormatter
@@ -20,7 +18,7 @@ fun MovieDto.toEntity() = Movie(
     adult = this.adult ?: false,
     backdropPath = this.backdropPath,
     genres = this.genreIds?.filterNotNull() ?: emptyList(),
-    id = this.id ?: -1,
+    id = this.id?.toLong() ?: -1L,
     originalLanguage = this.originalLanguage ?: "",
     originalTitle = this.originalTitle ?: "",
     overview = this.overview ?: "",
@@ -66,5 +64,19 @@ fun String?.toLocalDate(
     dateFormatter: DateTimeFormatter = ISO_LOCAL_DATE,
     defaultDate: LocalDate = LocalDate.now()
 ): LocalDate = this?.let { date -> parse(date, dateFormatter) } ?: defaultDate
+
+// TODO: Move mapping
+fun MovieDetailsDto?.toEntity(): MovieDetails =
+    MovieDetails(
+        id = this?.id,
+        backdropPath = this?.backdropPath,
+        posterPath = this?.posterPath,
+        genres = this?.genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
+        originalTitle = this?.originalTitle,
+        overview = this?.overview,
+        releaseDate = this?.releaseDate?.toLocalDate(),
+        runtime = this?.runtime ?: 0
+    )
+
 
 

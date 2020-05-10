@@ -14,7 +14,7 @@ class MovieListViewModel @Inject constructor(
 
     fun getPopularMovies(): LiveData<List<Movie>> =
         liveData {
-            val list = getPopularMoviesUseCase.execute()
+            val list = getPopularMoviesUseCase()
             emit(list)
         }
 }

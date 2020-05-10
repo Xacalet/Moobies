@@ -1,16 +1,16 @@
 package com.xacalet.domain.usecase
 
-import com.xacalet.domain.model.Movie
+import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-class GetPopularMoviesUseCase @Inject constructor(private val repository: MovieRepository) {
+class GetMovieDetailsUseCase @Inject constructor(private val repository: MovieRepository) {
 
-    suspend operator fun invoke(): List<Movie> =
+    suspend operator fun invoke(id: Long): MovieDetails =
         withContext(Dispatchers.IO) {
-            repository.getPopularMovies()
+            repository.getMovieDetails(id)
         }
 }

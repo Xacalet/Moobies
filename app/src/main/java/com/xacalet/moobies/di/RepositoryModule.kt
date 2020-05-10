@@ -1,9 +1,7 @@
 package com.xacalet.moobies.di
 
-import com.xacalet.data.repository.ConfigurationRepositoryImpl
 import com.xacalet.data.repository.GenreRepositoryImpl
 import com.xacalet.data.repository.MovieRepositoryImpl
-import com.xacalet.domain.repository.ConfigurationRepository
 import com.xacalet.domain.repository.GenreRepository
 import com.xacalet.domain.repository.MovieRepository
 import dagger.Binds
@@ -21,8 +19,4 @@ abstract class RepositoryModule {
     @Binds
     @Reusable
     abstract fun bindMovieRepository(movieRepository: MovieRepositoryImpl): MovieRepository
-
-    @Binds
-    @Reusable
-    abstract fun bindConfigurationRepository(configurationRepository: ConfigurationRepositoryImpl): ConfigurationRepository
 }

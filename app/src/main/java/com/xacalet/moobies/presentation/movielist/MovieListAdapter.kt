@@ -14,7 +14,8 @@ import kotlinx.android.synthetic.main.movie_list_item.view.*
 
 class MovieListAdapter(
     private val context: Context,
-    private val getImageUrlUseCase: GetImageUrlUseCase
+    private val getImageUrlUseCase: GetImageUrlUseCase,
+    private val onClick: (Long) -> Unit
 ) :
     RecyclerView.Adapter<MovieListAdapter.ItemViewHolder>() {
 
@@ -33,6 +34,7 @@ class MovieListAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         with(movies[position]) {
+            holder.itemView.setOnClickListener { onClick(this.id) }
             holder.itemView.movieListItemTitle.text = title
             holder.itemView.movieListItemRating.text = "$voteAverage"
             Glide.with(context)
