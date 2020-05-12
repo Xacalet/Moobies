@@ -1,6 +1,7 @@
 package com.xacalet.moobies.presentation.genreList
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ class GenreListView @JvmOverloads constructor(
     init {
         adapter = Adapter()
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        addItemDecoration(ItemDecoration(16))
     }
 
     fun setGenres(genres: List<Genre>) {
@@ -30,6 +32,21 @@ class GenreListView @JvmOverloads constructor(
             addAll(genres)
         }
         adapter?.notifyDataSetChanged()
+    }
+
+    private inner class ItemDecoration(private val margin: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: State) {
+            with(outRect) {
+                if (parent.getChildAdapterPosition(view) != 0) {
+                    if (view.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+                        right = margin
+                    } else {
+                        left = margin
+                    }
+
+                }
+            }
+        }
     }
 
     inner class Adapter : RecyclerView.Adapter<ViewHolder>() {

@@ -8,5 +8,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:textColor="?android:attr/textColorPrimary"
+    android:textAllCaps="false"
     app:strokeColor="?android:attr/textColorPrimary"
     tools:text="Genre" />

@@ -69,6 +69,8 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
                     yearAndDuratioText.text =
                         "${movieDetails.releaseDate?.year} ${formatRuntime(movieDetails.runtime)}"
                     genreList.setGenres(movieDetails.genres)
+                    ratingVoteAverage.text = "${movieDetails.voteAverage}/10"
+                    ratingVoteCount.text = "${movieDetails.voteCount}"
                 }
                 .onFailure {
                     context?.let { context ->

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Moobies</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name" translatable="false">Moobies</string>
+    <string name="add_to_reproduction_list">Add to playlist</string>
+    <string name="cast">Cast</string>
 </resources>

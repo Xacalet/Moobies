@@ -10,5 +10,7 @@ class MovieDetails(
     val originalTitle: String?,
     val overview: String?,
     val releaseDate: LocalDate?,
-    val runtime: Int
+    val runtime: Int,
+    val voteAverage: Double,
+    val voteCount: Int
 )
