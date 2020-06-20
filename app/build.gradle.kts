@@ -1,8 +1,12 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("androidx.navigation.safeargs.kotlin")
@@ -53,6 +57,10 @@ dependencies {
 
     implementation("com.google.dagger:dagger:${Versions.dagger}")
     kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
+    implementation("com.google.dagger:hilt-android:${Versions.dagger_hilt}")
+    kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger_hilt}")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.dagger_hilt_jetpack}")
+    kapt("androidx.hilt:hilt-compiler:${Versions.dagger_hilt_jetpack}")
 
     implementation("com.squareup.retrofit2:retrofit:${Versions.moshi}")
     implementation("com.squareup.retrofit2:converter-moshi:${Versions.moshi}")

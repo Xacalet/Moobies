@@ -1,6 +1,5 @@
 package com.xacalet.moobies.presentation.moviedetails
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -11,39 +10,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.xacalet.domain.usecase.GetImageUrlUseCase
-import com.xacalet.moobies.MoobiesApplication
 import com.xacalet.moobies.R
-import com.xacalet.moobies.di.ViewModelFactory
-import com.xacalet.moobies.presentation.moviedetails.di.MovieDetailsComponent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie_details.*
-import kotlinx.android.synthetic.main.movie_list_item.view.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
-
-    private lateinit var movieDetailsComponent: MovieDetailsComponent
 
     private val args: MovieDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var getImageUrlUseCase: GetImageUrlUseCase
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel by viewModels<MovieDetailsViewModel> { viewModelFactory }
-
-    override fun onAttach(context: Context) {
-        // Creates the instance of MovieListComponent
-        movieDetailsComponent =
-            (requireActivity().application as MoobiesApplication).appComponent.movieDetailsComponent()
-                .create()
-
-        // Injects the created component into this fragment
-        movieDetailsComponent.inject(this)
-
-        super.onAttach(context)
-    }
+    private val viewModel by viewModels<MovieDetailsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,7 +54,8 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
                 }
                 .onFailure {
                     context?.let { context ->
-                        Toast.makeText(context, "Couldn't get movie details", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Couldn't get movie details", Toast.LENGTH_LONG)
+                            .show()
                     }
                     this.findNavController().popBackStack()
                 }

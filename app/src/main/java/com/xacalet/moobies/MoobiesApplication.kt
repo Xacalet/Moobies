@@ -1,10 +1,7 @@
 package com.xacalet.moobies
 
 import android.app.Application
-import com.xacalet.moobies.di.AppComponent
-import com.xacalet.moobies.di.DaggerAppComponent
+import dagger.hilt.android.HiltAndroidApp
 
-class MoobiesApplication: Application() {
-
-    val appComponent: AppComponent = DaggerAppComponent.create()
-}
+@HiltAndroidApp
+class MoobiesApplication : Application()

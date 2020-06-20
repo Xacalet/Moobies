@@ -1,14 +1,14 @@
 package com.xacalet.moobies.presentation.movielist
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.usecase.GetPopularMoviesUseCase
-import javax.inject.Inject
 
 
-class MovieListViewModel @Inject constructor(
+class MovieListViewModel @ViewModelInject constructor(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase
 ) : ViewModel() {
 

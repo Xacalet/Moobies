@@ -2,6 +2,8 @@ object Versions {
     const val kotlin = "1.4-M2"
     const val kotlin_coroutines = "1.3.7"
     const val dagger = "2.28"
+    const val dagger_hilt = "2.28-alpha"
+    const val dagger_hilt_jetpack = "1.0.0-alpha01"
     const val glide = "4.11.0"
     const val junit = "4.13"
     const val material = "1.1.0"

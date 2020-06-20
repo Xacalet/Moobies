@@ -7,8 +7,10 @@ import com.xacalet.domain.repository.MovieRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 
-@Suppress("unused")
+@InstallIn(ApplicationComponent::class)
 @Module
 abstract class RepositoryModule {
 
