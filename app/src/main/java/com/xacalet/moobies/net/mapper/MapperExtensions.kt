@@ -3,6 +3,7 @@ package com.xacalet.moobies.net.mapper
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
+import com.xacalet.domain.model.PaginatedList
 import com.xacalet.moobies.net.api.dto.*
 import java.time.LocalDate
 import java.time.LocalDate.parse
@@ -51,8 +52,13 @@ fun GenresDto?.toEntity(): List<Genre> = this?.genres?.map(
  *
  * @param entityMapper Function that will map a single instance of type T into type S.
  */
-fun <T, S> PaginatedResultDto<T?>?.toEntityList(entityMapper: (T?) -> S): List<S> =
-    this?.results?.map(entityMapper) ?: emptyList()
+fun <T: Any, S> PaginatedResultDto<T?>?.toEntityList(entityMapper: (T) -> S): PaginatedList<S> =
+    PaginatedList(
+        this?.page ?: 0,
+        this?.totalResults ?: 0,
+        this?.totalPages ?: 0,
+        this?.results?.filterNotNull()?.map(entityMapper) ?: emptyList()
+    )
 
 /**
  * Maps this string date into a [LocalDate] instance.
@@ -79,6 +85,3 @@ fun MovieDetailsDto?.toEntity(): MovieDetails =
         voteAverage = this?.voteAverage ?: .0,
         voteCount = this?.voteCount ?: 0
     )
-
-
-

@@ -6,10 +6,10 @@ import com.squareup.moshi.Json
  * Class that represents a page of generic results returned by the Movie Database API.
  */
 data class PaginatedResultDto<out T>(
-    @field:Json(name = "id")
+    @field:Json(name = "page")
     val page: Int?,
     @field:Json(name = "results")
-    val results: List<T>?,
+    val results: List<T?>?,
     @field:Json(name = "total_results")
     val totalResults: Int?,
     @field:Json(name = "total_pages")

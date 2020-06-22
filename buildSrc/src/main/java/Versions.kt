@@ -16,6 +16,7 @@ object Versions {
         const val fragment = "1.2.5"
         const val lifecycle = "2.2.0"
         const val navigation = "2.2.2"
+        const val pagination = "3.0.0-alpha01"
         const val test_ext = "1.1.1"
         const val test_espresso = "3.2.0"
     }

@@ -3,6 +3,7 @@ package com.xacalet.moobies.net.datasource
 import com.xacalet.data.datasource.MovieDataSource
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
+import com.xacalet.domain.model.PaginatedList
 import com.xacalet.moobies.net.api.service.MovieApiService
 import com.xacalet.moobies.net.mapper.toEntity
 import com.xacalet.moobies.net.mapper.toEntityList
@@ -13,9 +14,9 @@ class MovieDataSourceImpl @Inject constructor(
     private val client: Retrofit
 ) : MovieDataSource {
 
-    override suspend fun getPopularMovies(): List<Movie> =
+    override suspend fun getPopularMovies(page: Int): PaginatedList<Movie> =
         client.create(MovieApiService::class.java).run {
-            getPopularMovies().toEntityList { it?.toEntity() }.filterNotNull()
+            getPopularMovies(page).toEntityList { it.toEntity() }
         }
 
     override suspend fun getMovieDetails(id: Long): MovieDetails =

@@ -1,18 +1,19 @@
 package com.xacalet.moobies.presentation.movielist
 
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.moobies.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+
 
 @AndroidEntryPoint
 class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
@@ -31,22 +32,12 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
             this.findNavController().navigate(action)
         }
         movieListView.adapter = adapter
-        movieListView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
 
+        lifecycleScope.launchWhenCreated {
+            @OptIn(ExperimentalCoroutinesApi::class)
+            viewModel.pagingFlow.collectLatest {
+                adapter.submitData(it)
             }
-
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean = false
-
-            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-                TODO("Not yet implemented")
-            }
-
-
-        })
-
-        viewModel.getPopularMovies().observe(viewLifecycleOwner, Observer { movies ->
-            adapter.setMovies(movies)
-        })
+        }
     }
 }

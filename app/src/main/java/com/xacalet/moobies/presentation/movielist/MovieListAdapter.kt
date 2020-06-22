@@ -4,8 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.moobies.R
@@ -16,10 +19,7 @@ class MovieListAdapter(
     private val context: Context,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val onClick: (Long) -> Unit
-) :
-    RecyclerView.Adapter<MovieListAdapter.ItemViewHolder>() {
-
-    private var movies: List<Movie> = emptyList()
+) : PagingDataAdapter<Movie, MovieListAdapter.ItemViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
         ItemViewHolder(
@@ -30,24 +30,32 @@ class MovieListAdapter(
             )
         )
 
-    override fun getItemCount(): Int = movies.size
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        with(movies[position]) {
-            holder.itemView.setOnClickListener { onClick(this.id) }
-            holder.itemView.movieListItemTitle.text = title
-            holder.itemView.movieListItemRating.text = "$voteAverage"
-            Glide.with(context)
-                .load(getImageUrlUseCase.invoke(holder.itemView.width, posterPath!!))
-                .centerCrop()
-                .into(holder.itemView.movieListItemCoverImage)
+        val item = getItem(position)
+        with(holder.itemView) {
+            setOnClickListener { onClick(item?.id ?: -1L) }
+            movieListItemTitle.text = item?.title ?: ""
+            movieListItemRating.text = "${item?.voteAverage}"
+            item?.posterPath?.let { posterPath ->
+                Glide.with(context)
+                    .load(getImageUrlUseCase(width, posterPath))
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(movieListItemCoverImage)
+            } ?: movieListItemCoverImage.setImageResource(0)
         }
     }
 
-    fun setMovies(movies: List<Movie>) {
-        this.movies = movies
-        notifyDataSetChanged()
-    }
+    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    companion object {
+
+        private val diffCallback = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                oldItem == newItem
+        }
+    }
 }
