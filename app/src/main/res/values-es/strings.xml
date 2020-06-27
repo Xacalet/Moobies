@@ -2,4 +2,7 @@
 <resources>
     <string name="add_to_reproduction_list">Añadir a la lista de reproducción</string>
     <string name="cast">Reparto</string>
+    <string name="loading_more_items">Cargando</string>
+    <string name="retry">Reintentar</string>
+    <string name="popular_movies">Películas del momento</string>
 </resources>

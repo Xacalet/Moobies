@@ -16,21 +16,21 @@ import kotlinx.android.synthetic.main.movie_list_item.view.*
 
 
 class MovieListAdapter(
-    private val context: Context,
-    private val getImageUrlUseCase: GetImageUrlUseCase,
-    private val onClick: (Long) -> Unit
-) : PagingDataAdapter<Movie, MovieListAdapter.ItemViewHolder>(diffCallback) {
+        private val context: Context,
+        private val getImageUrlUseCase: GetImageUrlUseCase,
+        private val onClick: (Long) -> Unit
+) : PagingDataAdapter<Movie, MovieListAdapter.MovieItemViewHolder>(diffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
-        ItemViewHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.movie_list_item,
-                parent,
-                false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieItemViewHolder =
+            MovieItemViewHolder(
+                    LayoutInflater.from(context).inflate(
+                            R.layout.movie_list_item,
+                            parent,
+                            false
+                    )
             )
-        )
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.itemView) {
             setOnClickListener { onClick(item?.id ?: -1L) }
@@ -38,24 +38,24 @@ class MovieListAdapter(
             movieListItemRating.text = "${item?.voteAverage}"
             item?.posterPath?.let { posterPath ->
                 Glide.with(context)
-                    .load(getImageUrlUseCase(width, posterPath))
-                    .centerCrop()
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(movieListItemCoverImage)
+                        .load(getImageUrlUseCase(width, posterPath))
+                        .centerCrop()
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(movieListItemCoverImage)
             } ?: movieListItemCoverImage.setImageResource(0)
         }
     }
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object {
 
         private val diffCallback = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
-                oldItem.id == newItem.id
+                    oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
-                oldItem == newItem
+                    oldItem == newItem
         }
     }
 }
