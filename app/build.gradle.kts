@@ -1,24 +1,19 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
     id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
 
     defaultConfig {
         applicationId = "com.xacalet.moobies"
         minSdkVersion(26)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
 
@@ -36,13 +31,24 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check")
+    }
+
+    composeOptions {
+        kotlinCompilerVersion = Versions.kotlin
+        kotlinCompilerExtensionVersion = Versions.AndroidX.compose
     }
 }
 
@@ -74,6 +80,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.paging:paging-runtime:${Versions.AndroidX.pagination}")
+
+    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
 
     implementation("com.github.bumptech.glide:glide:${Versions.glide}")
     implementation("com.github.bumptech.glide:recyclerview-integration:${Versions.glide}")

@@ -7,29 +7,36 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xacalet.moobies.R
-import kotlinx.android.synthetic.main.movie_list_loading_item.view.*
+import com.xacalet.moobies.databinding.MovieListLoadingItemBinding
+
 
 class MoviesLoadStateAdapter(
-        private val adapter: MovieListAdapter
+    private val adapter: MovieListAdapter
 ) : LoadStateAdapter<MoviesLoadStateAdapter.LoadingItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) =
-            LoadingItemViewHolder(parent)
+        LoadingItemViewHolder(
+            MovieListLoadingItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     override fun onBindViewHolder(holder: LoadingItemViewHolder, loadState: LoadState) {
-        with(holder.itemView) {
-            progressBar.isVisible = loadState is LoadState.Loading
-            retryButton.isVisible = loadState is LoadState.Error
-            retryButton.setOnClickListener { adapter.retry() }
-            loadingMessage.text = when (loadState) {
+        with(holder) {
+            binding.progressBar.isVisible = loadState is LoadState.Loading
+            binding.retryButton.isVisible = loadState is LoadState.Error
+            binding.retryButton.setOnClickListener { adapter.retry() }
+            binding.loadingMessage.text = when (loadState) {
                 is LoadState.Error -> (loadState as? LoadState.Error)?.error?.message
-                is LoadState.Loading -> resources.getString(R.string.loading_more_items)
+                is LoadState.Loading -> itemView.resources.getString(R.string.loading_more_items)
                 else -> ""
             }
-            loadingMessage.isVisible = loadingMessage.text.isNotBlank()
+            binding.loadingMessage.isVisible = binding.loadingMessage.text.isNotBlank()
         }
     }
 
-    class LoadingItemViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.movie_list_loading_item, parent, false))
+    class LoadingItemViewHolder(val binding: MovieListLoadingItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

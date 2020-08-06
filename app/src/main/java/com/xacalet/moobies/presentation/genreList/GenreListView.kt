@@ -1,4 +1,4 @@
-package com.xacalet.moobies.presentation.genreList
+ package com.xacalet.moobies.presentation.genreList
 
 import android.content.Context
 import android.graphics.Rect
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xacalet.domain.model.Genre
-import com.xacalet.moobies.R
-import kotlinx.android.synthetic.main.genre_list_item.view.*
+import com.xacalet.moobies.databinding.GenreListItemBinding
+
 
 class GenreListView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -51,24 +51,24 @@ class GenreListView @JvmOverloads constructor(
 
     inner class Adapter : RecyclerView.Adapter<ViewHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.genre_list_item, parent, false)
-        )
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            ViewHolder(
+                GenreListItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            )
 
         override fun getItemCount(): Int = genres.size
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.itemView.item?.apply {
+            holder.binding.item.apply {
                 text = genres.getOrNull(position)?.name ?: ""
                 this.setOnClickListener {
                     onItemClickListener?.onItemClick(genres.getOrNull(position))
                 }
             }
         }
-
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(val binding: GenreListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface OnItemClickListener {
         fun onItemClick(genre: Genre?)

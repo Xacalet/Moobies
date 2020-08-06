@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.moobies.R
+import com.xacalet.moobies.databinding.FragmentMovieListBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_movie_list.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -26,17 +25,19 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movieListView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+        val binding = FragmentMovieListBinding.bind(view)
+
+        binding.movieListView.layoutManager =
+            LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
         adapter = MovieListAdapter(view.context, GetImageUrlUseCase()) { id ->
             val action =
-                    MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment(id)
+                MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment(id)
             findNavController().navigate(action)
         }
-        movieListView.adapter = adapter.withLoadStateFooter(MoviesLoadStateAdapter(adapter))
-        movieListView.addItemDecoration(MovieListItemDecoration())
+        binding.movieListView.adapter = adapter.withLoadStateFooter(MoviesLoadStateAdapter(adapter))
+        binding.movieListView.addItemDecoration(MovieListItemDecoration())
 
         lifecycleScope.launchWhenCreated {
-            @OptIn(ExperimentalCoroutinesApi::class)
             viewModel.pagingFlow.collectLatest {
                 adapter.submitData(it)
             }
