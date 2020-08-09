@@ -12,6 +12,12 @@ interface MovieApiService {
     @GET("/3/movie/popular")
     suspend fun getPopularMovies(@Query(PAGE_PARAM) page: Int): PaginatedResultDto<MovieDto>
 
+    @GET("/3/movie/upcoming")
+    suspend fun getUpcomingMovies(@Query(PAGE_PARAM) page: Int): PaginatedResultDto<MovieDto>
+
+    @GET("/3/movie/now_playing")
+    suspend fun getNowPlayingMovies(@Query(PAGE_PARAM) page: Int): PaginatedResultDto<MovieDto>
+
     @GET("/3/movie/{$MOVIE_DETAILS_ID}")
     suspend fun getMovieDetails(@Path(MOVIE_DETAILS_ID) id: Long): MovieDetailsDto
 

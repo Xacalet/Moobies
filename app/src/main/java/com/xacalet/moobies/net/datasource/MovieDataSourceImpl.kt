@@ -19,6 +19,16 @@ class MovieDataSourceImpl @Inject constructor(
             getPopularMovies(page).toEntityList { it.toEntity() }
         }
 
+    override suspend fun getUpcomingMovies(page: Int): PaginatedList<Movie> =
+        client.create(MovieApiService::class.java).run {
+            getUpcomingMovies(page).toEntityList { it.toEntity() }
+        }
+
+    override suspend fun getNowPlayingMovies(page: Int): PaginatedList<Movie> =
+        client.create(MovieApiService::class.java).run {
+            getNowPlayingMovies(page).toEntityList { it.toEntity() }
+        }
+
     override suspend fun getMovieDetails(id: Long): MovieDetails =
         client.create(MovieApiService::class.java).run {
             getMovieDetails(id).toEntity()

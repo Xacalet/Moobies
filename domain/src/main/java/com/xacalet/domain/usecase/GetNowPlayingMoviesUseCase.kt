@@ -7,11 +7,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class GetPopularMoviesUseCase @Inject constructor(private val repository: MovieRepository) :
+class GetNowPlayingMoviesUseCase @Inject constructor(private val repository: MovieRepository) :
     GetMoviesUseCase {
 
     override suspend operator fun invoke(page: Int): PaginatedList<Movie> =
         withContext(Dispatchers.IO) {
-            repository.getPopularMovies(page)
+            repository.getNowPlayingMovies(page)
         }
 }

@@ -8,5 +8,9 @@ interface MovieRepository {
 
     suspend fun getPopularMovies(page: Int): PaginatedList<Movie>
 
+    suspend fun getUpcomingMovies(page: Int): PaginatedList<Movie>
+
+    suspend fun getNowPlayingMovies(page: Int): PaginatedList<Movie>
+
     suspend fun getMovieDetails(id: Long): MovieDetails
 }
