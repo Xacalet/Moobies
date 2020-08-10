@@ -1,12 +1,19 @@
 package com.xacalet.moobies.presentation.movies.pager
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.transition.TransitionManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 import androidx.viewpager2.widget.ViewPager2
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.model.KeyPath
+import com.google.android.material.transition.MaterialFadeThrough
 import com.xacalet.domain.model.Movie
 import com.xacalet.moobies.R
 import com.xacalet.moobies.databinding.FragmentMoviePagerBinding
@@ -48,14 +55,31 @@ class MoviePagerFragment : Fragment(R.layout.fragment_movie_pager) {
                         ?.updateLayoutProgress(latestMoviesPager.width - positionOffsetPixels)
                 }
             })
+            animationView.addValueCallback(
+                // Apply color filter over every animation layer.
+                KeyPath("**"),
+                LottieProperty.COLOR_FILTER,
+                {
+                    PorterDuffColorFilter(
+                        resources.getColor(R.color.imdbGold, null),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+                }
+            )
         }
 
         viewModel.items.observe(viewLifecycleOwner, { list ->
             pagerAdapter.setItems(list.results)
         })
+
+        viewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
+            TransitionManager.beginDelayedTransition(binding.container, MaterialFadeThrough())
+            binding.latestMoviesPager.isVisible = !isLoading
+            binding.animationView.isVisible = isLoading
+        })
     }
 
-    class PageAdapter(fragment: Fragment) : FragmentStateAdapter(fragment.childFragmentManager, fragment.lifecycle) {
+    class PageAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         private val fragmentManager = fragment.childFragmentManager
 

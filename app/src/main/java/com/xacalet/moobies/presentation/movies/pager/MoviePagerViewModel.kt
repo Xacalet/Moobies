@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.PaginatedList
 import com.xacalet.domain.usecase.GetPopularMoviesUseCase
+import kotlinx.coroutines.delay
 
 
 class MoviePagerViewModel @ViewModelInject constructor(
@@ -19,6 +20,7 @@ class MoviePagerViewModel @ViewModelInject constructor(
 
     val items: LiveData<PaginatedList<Movie>> = liveData {
         _isLoading.postValue(true)
+        delay(2000)
         emit(getPopularMoviesUseCase(1))
         _isLoading.postValue(false)
     }

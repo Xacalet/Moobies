@@ -6,6 +6,7 @@ object Versions {
     const val dagger_hilt_jetpack = "1.0.0-alpha02"
     const val glide = "4.11.0"
     const val junit = "4.13"
+    const val lottie = "3.4.1"
     const val material = "1.2.0"
     const val moshi = "2.7.0"
     object AndroidX {

@@ -87,6 +87,8 @@ dependencies {
     implementation("com.github.bumptech.glide:recyclerview-integration:${Versions.glide}")
     kapt("com.github.bumptech.glide:compiler:${Versions.glide}")
 
+    implementation("com.airbnb.android:lottie:${Versions.lottie}")
+
     testImplementation("junit:junit:${Versions.junit}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.test_ext}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.test_espresso}")
