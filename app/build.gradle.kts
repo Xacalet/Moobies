@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.xacalet.moobies"
-        minSdkVersion(26)
+        minSdkVersion(24)
         targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":net"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
@@ -67,9 +68,6 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger_hilt}")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.dagger_hilt_jetpack}")
     kapt("androidx.hilt:hilt-compiler:${Versions.dagger_hilt_jetpack}")
-
-    implementation("com.squareup.retrofit2:retrofit:${Versions.moshi}")
-    implementation("com.squareup.retrofit2:converter-moshi:${Versions.moshi}")
 
     implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appCompat}")
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")

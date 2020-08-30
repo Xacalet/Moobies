@@ -9,7 +9,7 @@ object Versions {
     const val lottie = "3.4.1"
     const val material = "1.2.0"
     const val mockk = "1.10.0"
-    const val moshi = "2.7.0"
+    const val retrofit = "2.9.0"
     object AndroidX {
         const val appCompat = "1.1.0"
         const val arch_core = "2.1.0"
