@@ -18,6 +18,7 @@ import com.xacalet.domain.model.Movie
 import com.xacalet.moobies.R
 import com.xacalet.moobies.databinding.FragmentMoviePagerBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import java.lang.ref.WeakReference
 
 
@@ -36,6 +37,7 @@ class MoviePagerFragment : Fragment(R.layout.fragment_movie_pager) {
         binding = FragmentMoviePagerBinding.bind(view)
         pagerAdapter = PageAdapter(this)
         with(binding) {
+            latestMoviesPager.offscreenPageLimit = 1
             latestMoviesPager.adapter = pagerAdapter
             latestMoviesPager.registerOnPageChangeCallback(object :
                 ViewPager2.OnPageChangeCallback() {

@@ -8,17 +8,18 @@ import com.xacalet.domain.repository.MovieRepository
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-    private val dataSource: MovieDataSource
+    private val movieDataSource: MovieDataSource
 ) : MovieRepository {
 
     override suspend fun getPopularMovies(page: Int): PaginatedList<Movie> =
-        dataSource.getPopularMovies(page)
+        movieDataSource.getPopularMovies(page)
 
     override suspend fun getUpcomingMovies(page: Int): PaginatedList<Movie> =
-        dataSource.getUpcomingMovies(page)
+        movieDataSource.getUpcomingMovies(page)
 
     override suspend fun getNowPlayingMovies(page: Int): PaginatedList<Movie> =
-        dataSource.getNowPlayingMovies(page)
+        movieDataSource.getNowPlayingMovies(page)
 
-    override suspend fun getMovieDetails(id: Long): MovieDetails = dataSource.getMovieDetails(id)
+    override suspend fun getMovieDetails(id: Long): MovieDetails =
+        movieDataSource.getMovieDetails(id)
 }

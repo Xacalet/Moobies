@@ -54,6 +54,14 @@
             app:layout_constraintTop_toTopOf="@id/movieListItemStar"
             tools:text="9.9" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/wishlistButton"
+            android:layout_width="50dp"
+            android:layout_height="54dp"
+            android:background="@drawable/wishlist_button_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

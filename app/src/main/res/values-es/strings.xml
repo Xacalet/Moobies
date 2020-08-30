@@ -6,4 +6,6 @@
     <string name="retry">Reintentar</string>
     <string name="popular_movies">Películas del momento</string>
     <string name="upcoming_movies">Próximamente</string>
+    <string name="added_to_wishlist">Añadido a la lista de deseados!</string>
+    <string name="removed_from_wishlist">Eliminado de la lista de deseados.</string>
 </resources>

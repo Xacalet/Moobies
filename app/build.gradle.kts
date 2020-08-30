@@ -73,6 +73,7 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appCompat}")
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
+    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
     implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
     implementation("androidx.core:core-ktx:${Versions.AndroidX.core}")
     implementation("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
@@ -80,8 +81,9 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.paging:paging-runtime:${Versions.AndroidX.pagination}")
-
-    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
+    implementation("androidx.room:room-ktx:${Versions.AndroidX.room}")
+    implementation("androidx.room:room-runtime:${Versions.AndroidX.room}")
+    kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
 
     implementation("com.github.bumptech.glide:glide:${Versions.glide}")
     implementation("com.github.bumptech.glide:recyclerview-integration:${Versions.glide}")
@@ -89,7 +91,10 @@ dependencies {
 
     implementation("com.airbnb.android:lottie:${Versions.lottie}")
 
+    testImplementation("androidx.arch.core:core-testing:${Versions.AndroidX.arch_core}")
+    testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("junit:junit:${Versions.junit}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.test_ext}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.test_espresso}")
 }

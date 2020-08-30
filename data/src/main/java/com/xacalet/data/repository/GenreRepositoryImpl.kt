@@ -7,6 +7,7 @@ import javax.inject.Inject
 
 class GenreRepositoryImpl @Inject constructor(
     private val dataSource: GenreDataSource
-): GenreRepository {
+) : GenreRepository {
+
     override suspend fun getGenres(): List<Genre> = dataSource.getGenres()
 }
