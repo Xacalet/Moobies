@@ -36,6 +36,7 @@ class MoviePagerItemViewModelTest {
     @MockK
     private lateinit var toggleWishlistUseCase: ToggleWishlistUseCase
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         MockKAnnotations.init(this)

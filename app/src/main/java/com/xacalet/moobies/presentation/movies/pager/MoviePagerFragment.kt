@@ -8,18 +8,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.transition.TransitionManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.adapter.FragmentViewHolder
 import androidx.viewpager2.widget.ViewPager2
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
 import com.google.android.material.transition.MaterialFadeThrough
-import com.xacalet.domain.model.Movie
 import com.xacalet.moobies.R
 import com.xacalet.moobies.databinding.FragmentMoviePagerBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import java.lang.ref.WeakReference
 
 
 @AndroidEntryPoint
@@ -27,48 +22,33 @@ class MoviePagerFragment : Fragment(R.layout.fragment_movie_pager) {
 
     private val viewModel by viewModels<MoviePagerViewModel>()
 
-    private lateinit var pagerAdapter: PageAdapter
+    private lateinit var pagerAdapter: MoviePagerAdapter
 
     private lateinit var binding: FragmentMoviePagerBinding
+
+    private lateinit var onPageChangeCallback: OnPageChangeCallback
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentMoviePagerBinding.bind(view)
-        pagerAdapter = PageAdapter(this)
-        with(binding) {
-            latestMoviesPager.offscreenPageLimit = 1
-            latestMoviesPager.adapter = pagerAdapter
-            latestMoviesPager.registerOnPageChangeCallback(object :
-                ViewPager2.OnPageChangeCallback() {
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {
-                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        pagerAdapter = MoviePagerAdapter(this)
+        onPageChangeCallback = OnPageChangeCallback(binding.latestMoviesPager, pagerAdapter)
 
-                    // Animates the current page
-                    pagerAdapter.getFragmentAt(position)
-                        ?.updateLayoutProgress(-positionOffsetPixels)
-
-                    // Animates the next page (if exists)
-                    pagerAdapter.getFragmentAt(position + 1)
-                        ?.updateLayoutProgress(latestMoviesPager.width - positionOffsetPixels)
-                }
-            })
-            animationView.addValueCallback(
-                // Apply color filter over every animation layer.
-                KeyPath("**"),
-                LottieProperty.COLOR_FILTER,
-                {
-                    PorterDuffColorFilter(
-                        resources.getColor(R.color.imdbGold, null),
-                        PorterDuff.Mode.SRC_ATOP
-                    )
-                }
-            )
-        }
+        binding.latestMoviesPager.offscreenPageLimit = 1
+        binding.latestMoviesPager.adapter = pagerAdapter
+        binding.latestMoviesPager.registerOnPageChangeCallback(onPageChangeCallback)
+        binding.animationView.addValueCallback(
+            // Apply color filter over every animation layer.
+            KeyPath("**"),
+            LottieProperty.COLOR_FILTER,
+            {
+                PorterDuffColorFilter(
+                    resources.getColor(R.color.imdbGold, null),
+                    PorterDuff.Mode.SRC_ATOP
+                )
+            }
+        )
 
         viewModel.items.observe(viewLifecycleOwner, { list ->
             pagerAdapter.setItems(list.results)
@@ -81,41 +61,24 @@ class MoviePagerFragment : Fragment(R.layout.fragment_movie_pager) {
         })
     }
 
-    class PageAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-
-        private val fragmentManager = fragment.childFragmentManager
-
-        private val fragments: MutableMap<Int, WeakReference<MoviePagerItemFragment>> =
-            mutableMapOf()
-
-        private val items: MutableList<Movie> = mutableListOf()
-
-        override fun getItemCount(): Int = items.size
-
-        override fun createFragment(position: Int): Fragment =
-            MoviePagerItemFragment.newInstance(items[position]).apply {
-                fragments[position] = WeakReference(this)
-            }
-
-        override fun onBindViewHolder(
-            holder: FragmentViewHolder,
+    class OnPageChangeCallback(
+        private val viewPager: ViewPager2,
+        private val pagerAdapter: MoviePagerAdapter
+    ) : ViewPager2.OnPageChangeCallback() {
+        override fun onPageScrolled(
             position: Int,
-            payloads: MutableList<Any>
+            positionOffset: Float,
+            positionOffsetPixels: Int
         ) {
-            super.onBindViewHolder(holder, position, payloads)
-            if (!fragments.containsKey(position)) {
-                (fragmentManager.findFragmentByTag("f" + items[position].id) as? MoviePagerItemFragment)?.apply {
-                    fragments[position] = WeakReference(this)
-                }
-            }
-        }
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels)
 
-        fun getFragmentAt(position: Int): MoviePagerItemFragment? = fragments[position]?.get()
+            // Animates the current page
+            pagerAdapter.getFragmentAt(position)
+                ?.updateLayoutProgress(-positionOffsetPixels)
 
-        fun setItems(items: List<Movie>) {
-            this.items.clear()
-            this.items.addAll(items)
-            notifyDataSetChanged()
+            // Animates the next page (if exists)
+            pagerAdapter.getFragmentAt(position + 1)
+                ?.updateLayoutProgress(viewPager.width - positionOffsetPixels)
         }
     }
 }
