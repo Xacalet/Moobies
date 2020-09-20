@@ -6,19 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.moobies.R
 import com.xacalet.moobies.databinding.FragmentMovieDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
     private val args: MovieDetailsFragmentArgs by navArgs()
-
-    @Inject
-    lateinit var getImageUrlUseCase: GetImageUrlUseCase
 
     private val viewModel by viewModels<MovieDetailsViewModel>()
 
@@ -29,23 +24,18 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
         binding = FragmentMovieDetailsBinding.bind(view)
 
-        viewModel.start(args.movieId)
+        viewModel.setId(args.movieId)
 
         viewModel.details.observe(viewLifecycleOwner, { movieDetails ->
 
+            movieDetails?.backdropPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                viewModel.setBackdropImageParams(binding.backdropImage.width, path)
+            }
+            movieDetails?.posterPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                viewModel.setPosterImageParams(binding.posterImage.width, path)
+            }
+
             // Load data
-            movieDetails.backdropPath?.let { backdropPath ->
-                Glide.with(binding.backdropImage.context)
-                    .load(getImageUrlUseCase.invoke(binding.backdropImage.width, backdropPath))
-                    .centerCrop()
-                    .into(binding.backdropImage)
-            }
-            movieDetails.posterPath?.let { posterPath ->
-                Glide.with(binding.posterImage.context)
-                    .load(getImageUrlUseCase.invoke(binding.posterImage.width, posterPath))
-                    .centerCrop()
-                    .into(binding.posterImage)
-            }
             binding.movieTitle.text = movieDetails.originalTitle
             binding.overviewText.text = movieDetails.overview
             binding.yearAndDuratioText.text =
@@ -55,9 +45,15 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
             binding.ratingVoteCount.text = "${movieDetails.voteCount}"
 
         })
+
+        viewModel.posterUrlImage.observe(viewLifecycleOwner, { url ->
+            Glide.with(binding.posterImage.context).load(url).into(binding.posterImage)
+        })
+
+        viewModel.backdropUrlImage.observe(viewLifecycleOwner, { url ->
+            Glide.with(binding.backdropImage.context).load(url).into(binding.backdropImage)
+        })
     }
 
-    private fun formatRuntime(runtime: Int): String =
-        "${runtime.div(60)}h ${runtime % 60}min"
-
+    private fun formatRuntime(runtime: Int): String = "${runtime.div(60)}h ${runtime % 60}min"
 }

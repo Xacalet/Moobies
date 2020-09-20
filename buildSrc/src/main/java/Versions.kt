@@ -14,7 +14,7 @@ object Versions {
         const val appCompat = "1.1.0"
         const val arch_core = "2.1.0"
         const val cardView = "1.0.0"
-        const val compose = "1.0.0-alpha01"
+        const val compose = "1.0.0-alpha03"
         const val constraintLayout = "2.0.0"
         const val core = "1.3.0"
         const val fragment = "1.3.0-alpha08"
