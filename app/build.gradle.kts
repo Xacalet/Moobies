@@ -37,6 +37,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -57,6 +58,8 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":net"))
 
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}")
+
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
 
@@ -71,7 +74,6 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appCompat}")
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
-    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
     implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
     implementation("androidx.core:core-ktx:${Versions.AndroidX.core}")
     implementation("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
@@ -82,6 +84,15 @@ dependencies {
     implementation("androidx.room:room-ktx:${Versions.AndroidX.room}")
     implementation("androidx.room:room-runtime:${Versions.AndroidX.room}")
     kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
+
+    // Jetpack compose
+    implementation("androidx.compose.foundation:foundation:${Versions.AndroidX.compose}")
+    implementation("androidx.compose.material:material:${Versions.AndroidX.compose}")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}")
+    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
+    implementation("androidx.ui:ui-tooling:${Versions.AndroidX.compose}")
+    implementation("com.google.android.material:compose-theme-adapter:${Versions.compose_theme_adapter}")
+    implementation("dev.chrisbanes.accompanist:accompanist-coil:${Versions.coil}")
 
     implementation("com.github.bumptech.glide:glide:${Versions.glide}")
     implementation("com.github.bumptech.glide:recyclerview-integration:${Versions.glide}")

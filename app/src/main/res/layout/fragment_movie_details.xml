@@ -134,7 +134,7 @@
                     android:drawablePadding="16dp"
                     android:elevation="4dp"
                     android:gravity="start|center"
-                    android:text="@string/add_to_reproduction_list"
+                    android:text="@string/add_to_wishlist"
                     android:textAllCaps="false" />
 
                 <View

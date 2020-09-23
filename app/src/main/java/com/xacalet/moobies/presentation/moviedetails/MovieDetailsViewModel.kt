@@ -5,11 +5,18 @@ import androidx.lifecycle.*
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.domain.usecase.GetMovieDetailsUseCase
+import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
+import com.xacalet.domain.usecase.ToggleWishlistUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel @ViewModelInject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
-    private val getImageUrlUseCase: GetImageUrlUseCase
+    private val getImageUrlUseCase: GetImageUrlUseCase,
+    private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,
+    private val toggleWishlistUseCase: ToggleWishlistUseCase
 ) : ViewModel() {
 
     private val _id = MutableLiveData<Long>()
@@ -17,6 +24,10 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     private val _posterFilePath = MutableLiveData<String>()
     private val _backdropImageWidth = MutableLiveData<Int>()
     private val _backdropFilePath = MutableLiveData<String>()
+    private val _addedToWishList = MutableLiveData<Boolean>()
+
+    @ExperimentalCoroutinesApi
+    private val _toggledWishlist: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
     private val _details: LiveData<MovieDetails> = _id.switchMap { id ->
         liveData(viewModelScope.coroutineContext) {
@@ -27,6 +38,13 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     val details: LiveData<MovieDetails> = _details
     val posterUrlImage: MediatorLiveData<String> = MediatorLiveData()
     val backdropUrlImage: MediatorLiveData<String> = MediatorLiveData()
+    val isWishlisted: LiveData<Boolean> = _id.switchMap { id ->
+        isWishlistedFlowUseCase(id).asLiveData()
+    }
+
+    @ExperimentalCoroutinesApi
+    val toggledWishlist: Flow<Boolean?>
+        get() = _toggledWishlist
 
     init {
         listOf(_posterImageWidth, _posterFilePath).forEach { source ->
@@ -62,6 +80,16 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     fun setId(id: Long) {
         if (_id.value != id) {
             _id.value = id
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun toggleWishlist() {
+        _id.value?.let { id ->
+            viewModelScope.launch {
+                val isWishlisted = toggleWishlistUseCase(id)
+                _toggledWishlist.value = isWishlisted
+            }
         }
     }
 

@@ -1,59 +1,61 @@
 package com.xacalet.moobies.presentation.moviedetails
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.xacalet.moobies.R
-import com.xacalet.moobies.databinding.FragmentMovieDetailsBinding
+import com.xacalet.domain.model.MovieDetails
+import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
-class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
+class MovieDetailsFragment : Fragment() {
 
     private val args: MovieDetailsFragmentArgs by navArgs()
 
     private val viewModel by viewModels<MovieDetailsViewModel>()
 
-    private lateinit var binding: FragmentMovieDetailsBinding
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = FragmentMovieDetailsBinding.bind(view)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         viewModel.setId(args.movieId)
-
-        viewModel.details.observe(viewLifecycleOwner, { movieDetails ->
-
-            movieDetails?.backdropPath.takeIf { !it.isNullOrBlank() }?.let { path ->
-                viewModel.setBackdropImageParams(binding.backdropImage.width, path)
-            }
-            movieDetails?.posterPath.takeIf { !it.isNullOrBlank() }?.let { path ->
-                viewModel.setPosterImageParams(binding.posterImage.width, path)
-            }
-
-            // Load data
-            binding.movieTitle.text = movieDetails.originalTitle
-            binding.overviewText.text = movieDetails.overview
-            binding.yearAndDuratioText.text =
-                "${movieDetails.releaseDate?.year} ${formatRuntime(movieDetails.runtime)}"
-            binding.genreList.setGenres(movieDetails.genres)
-            binding.ratingVoteAverage.text = "${movieDetails.voteAverage}/10"
-            binding.ratingVoteCount.text = "${movieDetails.voteCount}"
-
-        })
-
-        viewModel.posterUrlImage.observe(viewLifecycleOwner, { url ->
-            Glide.with(binding.posterImage.context).load(url).into(binding.posterImage)
-        })
-
-        viewModel.backdropUrlImage.observe(viewLifecycleOwner, { url ->
-            Glide.with(binding.backdropImage.context).load(url).into(binding.backdropImage)
-        })
     }
 
-    private fun formatRuntime(runtime: Int): String = "${runtime.div(60)}h ${runtime % 60}min"
+    @ExperimentalCoroutinesApi
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        ComposeView(context = requireContext()).apply {
+            setContent {
+                viewModel.details.observeAsState().value.let { movie: MovieDetails? ->
+                    if (movie != null) {
+                        // TODO: Get dimensions later.
+                        movie.posterPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                            viewModel.setPosterImageParams(200, path)
+                        }
+                        // TODO: Get dimensions later.
+                        movie.backdropPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                            viewModel.setBackdropImageParams(1000, path)
+                        }
+                        MoobiesTheme {
+                            MovieDetailsScreen(
+                                movie = movie,
+                                backdropImageUrl = viewModel.backdropUrlImage.observeAsState(),
+                                posterImageUrl = viewModel.posterUrlImage.observeAsState(),
+                                isWishlisted = viewModel.isWishlisted.observeAsState(false),
+                                onWishlistToggled = { viewModel.toggleWishlist() }
+                            )
+                        }
+                    }
+                }
+            }
+        }
 }

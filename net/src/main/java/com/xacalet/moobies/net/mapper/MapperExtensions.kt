@@ -82,6 +82,7 @@ fun MovieDetailsDto?.toEntity(): MovieDetails =
         overview = this?.overview,
         releaseDate = this?.releaseDate?.toLocalDate(),
         runtime = this?.runtime ?: 0,
+        title = this?.title,
         voteAverage = this?.voteAverage ?: .0,
         voteCount = this?.voteCount ?: 0
     )
