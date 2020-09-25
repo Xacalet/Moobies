@@ -20,7 +20,7 @@ data class MovieDetailsDto(
     @field:Json(name = "homepage")
     val homepage: String? = null,
     @field:Json(name = "id")
-    val id: Int? = null,
+    val id: Long? = null,
     @field:Json(name = "imdb_id")
     val imdbId: String? = null,
     @field:Json(name = "original_language")

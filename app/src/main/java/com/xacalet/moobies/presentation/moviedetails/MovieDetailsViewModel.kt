@@ -3,10 +3,7 @@ package com.xacalet.moobies.presentation.moviedetails
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.xacalet.domain.model.MovieDetails
-import com.xacalet.domain.usecase.GetImageUrlUseCase
-import com.xacalet.domain.usecase.GetMovieDetailsUseCase
-import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
-import com.xacalet.domain.usecase.ToggleWishlistUseCase
+import com.xacalet.domain.usecase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +13,8 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,
-    private val toggleWishlistUseCase: ToggleWishlistUseCase
+    private val toggleWishlistUseCase: ToggleWishlistUseCase,
+    private val getUserRatingFlowUseCase: GetUserRatingFlowUseCase
 ) : ViewModel() {
 
     private val _id = MutableLiveData<Long>()
@@ -40,6 +38,9 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     val backdropUrlImage: MediatorLiveData<String> = MediatorLiveData()
     val isWishlisted: LiveData<Boolean> = _id.switchMap { id ->
         isWishlistedFlowUseCase(id).asLiveData()
+    }
+    val userRating: LiveData<Byte?> = _id.switchMap { id ->
+        getUserRatingFlowUseCase(id).asLiveData()
     }
 
     @ExperimentalCoroutinesApi
@@ -106,4 +107,3 @@ class MovieDetailsViewModel @ViewModelInject constructor(
         }
     }
 }
-

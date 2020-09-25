@@ -74,7 +74,7 @@ fun String?.toLocalDate(
 // TODO: Move mapping
 fun MovieDetailsDto?.toEntity(): MovieDetails =
     MovieDetails(
-        id = this?.id,
+        id = this?.id ?: -1L,
         backdropPath = this?.backdropPath,
         posterPath = this?.posterPath,
         genres = this?.genres?.mapNotNull { it?.toEntity() } ?: emptyList(),

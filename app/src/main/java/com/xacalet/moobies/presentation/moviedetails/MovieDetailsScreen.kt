@@ -4,11 +4,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -16,23 +14,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
+import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
+import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
-import com.xacalet.moobies.presentation.ui.Yellow600
 import dev.chrisbanes.accompanist.coil.CoilImage
-import java.text.NumberFormat
+import java.time.LocalDate
 
 @Composable
 fun MovieDetailsScreen(
@@ -40,7 +34,9 @@ fun MovieDetailsScreen(
     backdropImageUrl: State<String?>,
     posterImageUrl: State<String?>,
     isWishlisted: State<Boolean>,
-    onWishlistToggled: () -> Unit
+    userRating: State<Byte?>,
+    onWishlistToggled: () -> Unit,
+    onUserRatingClicked: () -> Unit
 ) {
     ScrollableColumn {
         Surface(
@@ -81,7 +77,7 @@ fun MovieDetailsScreen(
                         .padding(start = 16.dp, end = 16.dp, top = 32.dp)
                 )
                 Divider(modifier = Modifier.padding(top = 16.dp, bottom = 12.dp))
-                Review(movie.voteAverage, movie.voteCount)
+                RatingSection(movie.voteAverage, movie.voteCount, userRating, onUserRatingClicked)
             }
         }
         Surface(modifier = Modifier.height(128.dp).padding(top = 64.dp)) { }
@@ -239,90 +235,36 @@ fun WishlistTextButton(
     }
 }
 
-@Composable
-fun Review(
-    voteAverage: Double,
-    voteCount: Int
-) {
-    Row {
-        //Popular rating
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1F)
-        ) {
-            Image(
-                asset = Filled.Star,
-                colorFilter = ColorFilter.tint(Yellow600),
-                modifier = Modifier
-                    .height(32.dp)
-                    .width(32.dp)
-            )
-            Text(
-                annotatedString {
-                    withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)) {
-                        append(voteAverage.toString())
-                    }
-                    withStyle(SpanStyle(fontSize = 16.sp)) {
-                        append("/10")
-                    }
-                }
-            )
-            ProvideEmphasis(EmphasisAmbient.current.medium) {
-                Text(
-                    NumberFormat.getInstance().format(voteCount),
-                    style = MaterialTheme.typography.body1
-                )
-            }
-        }
-        //User rating
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1F)
-        ) {
-            // TODO: Display layout when movie is rated.
-            Image(
-                asset = Filled.Star,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
-                modifier = Modifier
-                    .height(32.dp)
-                    .width(32.dp)
-            )
-            Text(
-                text = stringResource(R.string.rate_this).toUpperCase(),
-                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-            )
-        }
-        //Review
-        Box(
-            modifier = Modifier.weight(1F)
-        )
-    }
-}
-
-
 private fun formatRuntime(runtime: Int): String = "${runtime.div(60)}h ${runtime % 60}min"
 
 @Composable
-@Preview
-fun PreviewHeader() {
-    DetailHeader(
-        titleText = "A movie title that is a bit long",
-        imageUrl = "https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg"
-    ) {
-        Row {
-            ProvideEmphasis(EmphasisAmbient.current.medium) {
-                Text(
-                    text = "2017",
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)
-                )
-                Text(
-                    text = "2h 30m",
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-        }
-    }
+@Preview(showBackground = true)
+fun PreviewDetailsScreen() {
+    val movie = MovieDetails(
+        id = 0,
+        backdropPath = "",
+        posterPath = "",
+        genres = listOf(Genre(1, "Drama"), Genre(2, "Action")),
+        originalTitle = "A movie title that is a bit long",
+        overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        releaseDate = LocalDate.now(),
+        runtime = 143,
+        title = "A movie title that is a bit long",
+        voteAverage = 8.3,
+        voteCount = 1234,
+    )
+    val isWishlisted = remember { mutableStateOf(true) }
+    val backdropImageUrl: State<String?> = remember { mutableStateOf("") }
+    val posterImageUrl: State<String?> = remember { mutableStateOf("") }
+    val userRating: State<Byte?> = remember { mutableStateOf(6) }
+    MovieDetailsScreen(
+        movie = movie,
+        backdropImageUrl = backdropImageUrl,
+        posterImageUrl = posterImageUrl,
+        isWishlisted = isWishlisted,
+        userRating = userRating,
+        onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
+        onUserRatingClicked = {})
 }
 
 @Composable
@@ -347,8 +289,3 @@ fun PreviewWishlistButton() {
     )
 }
 
-@Composable
-@Preview(showBackground = true)
-fun PreviewReviewZone() {
-    Review(6.3, 1031)
-}

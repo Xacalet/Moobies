@@ -9,7 +9,7 @@
         android:id="@+id/movieListFragment"
         android:name="com.xacalet.moobies.presentation.movielist.MovieListFragment"
         android:label="fragment_movie_list"
-        tools:layout="@layout/fragment_movie_list" >
+        tools:layout="@layout/fragment_movie_list">
         <action
             android:id="@+id/action_movieListFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
@@ -21,7 +21,19 @@
         tools:layout="@layout/fragment_movie_details">
         <argument
             android:name="movieId"
-            app:argType="long"
-            android:defaultValue="-1L" />
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <action
+            android:id="@+id/goToUserRating"
+            app:destination="@id/userRatingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userRatingFragment"
+        android:name="com.xacalet.moobies.presentation.userrating.UserRatingFragment"
+        android:label="user_rating_fragment">
+        <argument
+            android:name="showId"
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 </navigation>

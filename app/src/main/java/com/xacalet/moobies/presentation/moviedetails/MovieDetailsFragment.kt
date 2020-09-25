@@ -8,6 +8,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
@@ -51,7 +52,13 @@ class MovieDetailsFragment : Fragment() {
                                 backdropImageUrl = viewModel.backdropUrlImage.observeAsState(),
                                 posterImageUrl = viewModel.posterUrlImage.observeAsState(),
                                 isWishlisted = viewModel.isWishlisted.observeAsState(false),
-                                onWishlistToggled = { viewModel.toggleWishlist() }
+                                userRating = viewModel.userRating.observeAsState(),
+                                onWishlistToggled = { viewModel.toggleWishlist() },
+                                onUserRatingClicked = {
+                                    findNavController().navigate(
+                                        MovieDetailsFragmentDirections.goToUserRating(movie.id)
+                                    )
+                                }
                             )
                         }
                     }

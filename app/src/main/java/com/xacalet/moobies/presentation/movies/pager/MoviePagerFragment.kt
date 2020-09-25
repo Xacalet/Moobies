@@ -44,7 +44,7 @@ class MoviePagerFragment : Fragment(R.layout.fragment_movie_pager) {
             LottieProperty.COLOR_FILTER,
             {
                 PorterDuffColorFilter(
-                    resources.getColor(R.color.imdbGold, null),
+                    resources.getColor(R.color.colorPrimary, null),
                     PorterDuff.Mode.SRC_ATOP
                 )
             }

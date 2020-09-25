@@ -9,4 +9,5 @@
     <string name="added_to_wishlist">Añadido a la lista de reproducción</string>
     <string name="removed_from_wishlist">Eliminado de la lista de deseados</string>
     <string name="rate_this">Clasificar</string>
+    <string name="you">Usted</string>
 </resources>

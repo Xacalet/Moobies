@@ -78,6 +78,7 @@ dependencies {
     implementation("androidx.core:core-ktx:${Versions.AndroidX.core}")
     implementation("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}")
     implementation("androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.paging:paging-runtime:${Versions.AndroidX.pagination}")

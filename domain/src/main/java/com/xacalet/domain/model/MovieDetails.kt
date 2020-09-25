@@ -3,7 +3,7 @@ package com.xacalet.domain.model
 import java.time.LocalDate
 
 class MovieDetails(
-    val id: Int?,
+    val id: Long,
     val backdropPath: String?,
     val posterPath: String?,
     val genres: List<Genre>,
