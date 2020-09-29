@@ -25,6 +25,7 @@ import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
+import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.time.LocalDate
 
@@ -39,10 +40,7 @@ fun MovieDetailsScreen(
     onUserRatingClicked: () -> Unit
 ) {
     ScrollableColumn {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            elevation = 2.dp
-        ) {
+        Surface(elevation = 2.dp) {
             Column(modifier = Modifier.padding(bottom = 32.dp)) {
                 DetailHeader(
                     titleText = movie.title ?: "",
@@ -52,10 +50,10 @@ fun MovieDetailsScreen(
                         ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
                             ProvideEmphasis(EmphasisAmbient.current.medium) {
                                 Text(movie.releaseDate?.year?.toString() ?: "")
-                                Text(
-                                    text = formatRuntime(movie.runtime),
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
+                                val runtime = movie.runtime.let {
+                                    "${it.div(60)}h ${it % 60}min"
+                                }
+                                Text(runtime, Modifier.padding(start = 8.dp))
                             }
                         }
 
@@ -139,14 +137,11 @@ fun DetailOverview(
     descriptionText: String
 ) {
     Column {
-        ConstraintLayout(
-            modifier = Modifier
-                .padding(top = 16.dp, start = 16.dp)
-                .fillMaxWidth()
+        ConstraintLayout(Modifier
+            .padding(top = 16.dp, start = 16.dp)
+            .fillMaxWidth()
         ) {
-
             val (image, genreList, overview, button) = createRefs()
-
             CoilImage(
                 data = imageUrl ?: "",
                 contentScale = ContentScale.Crop,
@@ -215,27 +210,20 @@ fun WishlistTextButton(
         contentColor = if (isWishlisted.value) MaterialTheme.colors.onSurface else Color.White
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(top = 4.dp, bottom = 4.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(if (isWishlisted.value) Icons.Default.Check else Icons.Default.Add)
             Text(
-                text = stringResource(
-                    if (isWishlisted.value)
-                        R.string.added_to_wishlist
-                    else
-                        R.string.add_to_wishlist
-                ),
-                modifier = Modifier.padding(start = 16.dp),
+                stringResource(if (isWishlisted.value) R.string.added_to_wishlist else R.string.add_to_wishlist),
+                Modifier.padding(start = 16.dp),
                 style = MaterialTheme.typography.button.copy(fontWeight = FontWeight.Normal)
             )
         }
     }
 }
-
-private fun formatRuntime(runtime: Int): String = "${runtime.div(60)}h ${runtime % 60}min"
 
 @Composable
 @Preview(showBackground = true)
@@ -258,34 +246,13 @@ fun PreviewDetailsScreen() {
     val posterImageUrl: State<String?> = remember { mutableStateOf("") }
     val userRating: State<Byte?> = remember { mutableStateOf(6) }
     MovieDetailsScreen(
-        movie = movie,
-        backdropImageUrl = backdropImageUrl,
-        posterImageUrl = posterImageUrl,
-        isWishlisted = isWishlisted,
-        userRating = userRating,
-        onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
-        onUserRatingClicked = {})
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewBody() {
-    DetailOverview(
-        "https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg",
-        listOf("Adventure", "Drama"),
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewWishlistButton() {
-    val isWishlisted = remember { mutableStateOf(true) }
-
-    WishlistTextButton(
-        isWishlisted = isWishlisted,
-        onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
-        modifier = Modifier.fillMaxWidth().padding(4.dp)
-    )
+            movie = movie,
+            backdropImageUrl = backdropImageUrl,
+            posterImageUrl = posterImageUrl,
+            isWishlisted = isWishlisted,
+            userRating = userRating,
+            onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
+            onUserRatingClicked = {}
+        )
 }
 

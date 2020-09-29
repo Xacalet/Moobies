@@ -12,6 +12,9 @@ class UserRatingRepositoryImpl @Inject constructor(
     override suspend fun addUserRating(id: Long, stars: Byte) =
         userRatingDataSource.addUserRating(id, stars)
 
+    override suspend fun deleteUserRating(id: Long) =
+        userRatingDataSource.deleteUserRating(id)
+
     override fun getUserRatingFlow(id: Long): Flow<Byte?> = userRatingDataSource.getUserRatingFlow(id)
 
     override suspend fun getUserRating(id: Long): Byte? = userRatingDataSource.getUserRating(id)

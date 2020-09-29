@@ -17,22 +17,9 @@
     <fragment
         android:id="@+id/movieDetailsFragment"
         android:name="com.xacalet.moobies.presentation.moviedetails.MovieDetailsFragment"
-        android:label="fragment_movie_details"
-        tools:layout="@layout/fragment_movie_details">
+        android:label="fragment_movie_details">
         <argument
             android:name="movieId"
-            android:defaultValue="-1L"
-            app:argType="long" />
-        <action
-            android:id="@+id/goToUserRating"
-            app:destination="@id/userRatingFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/userRatingFragment"
-        android:name="com.xacalet.moobies.presentation.userrating.UserRatingFragment"
-        android:label="user_rating_fragment">
-        <argument
-            android:name="showId"
             android:defaultValue="-1L"
             app:argType="long" />
     </fragment>

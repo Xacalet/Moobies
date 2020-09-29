@@ -61,9 +61,7 @@ fun RatingSection(
             } ?: PendingUserRatingItem()
         }
         //Review
-        Box(
-            modifier = Modifier.weight(1F)
-        )
+        Box(Modifier.weight(1F))
     }
 }
 
@@ -90,15 +88,13 @@ fun StarredRatingItem(
     ratingFormatter: (Float) -> String = { value -> value.toString() },
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.weight(1F)
+        modifier = Modifier.weight(1F),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             asset = Icons.Filled.Star,
             colorFilter = ColorFilter.tint(starColor),
-            modifier = Modifier
-                .height(32.dp)
-                .width(32.dp)
+            modifier = Modifier.size(32.dp)
         )
         Text(
             annotatedString {
@@ -118,15 +114,11 @@ fun StarredRatingItem(
 
 @Composable
 fun PendingUserRatingItem() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             asset = Icons.Filled.Star,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
-            modifier = Modifier
-                .height(32.dp)
-                .width(32.dp)
+            modifier = Modifier.size(32.dp)
         )
         Text(
             text = stringResource(R.string.rate_this).toUpperCase(),

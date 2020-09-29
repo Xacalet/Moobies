@@ -10,4 +10,10 @@
     <string name="removed_from_wishlist">Removed from wishlist</string>
     <string name="rate_this">Rate this</string>
     <string name="you">You</string>
+    <string name="rating_question">How would you rate %s?</string>
+    <string name="share_rating">Share rating</string>
+    <string name="rate">Rate</string>
+    <string name="remove_rating">Remove rating</string>
+    <string name="other_titles_you_rated_x_y">Other titles you rated %1$d/%2$d</string>
+    <string name="no_other_titles_with_this_rating">No other titles with this rating.</string>
 </resources>

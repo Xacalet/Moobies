@@ -14,6 +14,10 @@ class UserRatingDataSourceImpl @Inject constructor(
         userRatingDao.insert(UserRatingDbModel(showId, stars))
     }
 
+    override suspend fun deleteUserRating(id: Long) {
+        userRatingDao.delete(id)
+    }
+
     override fun getUserRatingFlow(id: Long): Flow<Byte?> = userRatingDao.getByIdFlow(id)
 
     override suspend fun getUserRating(id: Long): Byte? = userRatingDao.getById(id)

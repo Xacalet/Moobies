@@ -1,5 +1,6 @@
 package com.xacalet.moobies.presentation.moviedetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
+import com.xacalet.moobies.presentation.userrating.UserRatingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -55,9 +57,10 @@ class MovieDetailsFragment : Fragment() {
                                 userRating = viewModel.userRating.observeAsState(),
                                 onWishlistToggled = { viewModel.toggleWishlist() },
                                 onUserRatingClicked = {
-                                    findNavController().navigate(
-                                        MovieDetailsFragmentDirections.goToUserRating(movie.id)
-                                    )
+                                    val intent = Intent(activity, UserRatingActivity::class.java).apply {
+                                        putExtra(UserRatingActivity.EXTRA_ID, movie.id)
+                                    }
+                                    startActivity(intent)
                                 }
                             )
                         }

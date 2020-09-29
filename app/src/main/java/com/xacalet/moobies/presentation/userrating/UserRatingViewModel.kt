@@ -2,10 +2,7 @@ package com.xacalet.moobies.presentation.userrating
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.xacalet.domain.usecase.AddUserRatingUseCase
-import com.xacalet.domain.usecase.GetImageUrlUseCase
-import com.xacalet.domain.usecase.GetMovieDetailsUseCase
-import com.xacalet.domain.usecase.GetUserRatingUseCase
+import com.xacalet.domain.usecase.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,7 +11,8 @@ class UserRatingViewModel @ViewModelInject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getUserRatingUseCase: GetUserRatingUseCase,
-    private val addUserRatingUseCase: AddUserRatingUseCase
+    private val addUserRatingUseCase: AddUserRatingUseCase,
+    private val deleteUserRatingUseCase: DeleteUserRatingUseCase
 ) : ViewModel() {
 
     private val _id = MutableLiveData<Long>()
@@ -24,12 +22,13 @@ class UserRatingViewModel @ViewModelInject constructor(
     init {
         data = _id.switchMap { id ->
             liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                val imageUrl = getMovieDetailsUseCase(id).posterPath?.let { filePath ->
-                    getImageUrlUseCase(200, filePath)
+                val details = getMovieDetailsUseCase(id)
+                val imageUrl = details.posterPath?.let { filePath ->
+                    getImageUrlUseCase(500, filePath)
                 }
                 val stars = getUserRatingUseCase(id)
-                delay(1000) //Just to give visibility to the progress bar
-                emit(UserRatingUiModel(id, stars, imageUrl))
+                //delay(1000) //Just to give visibility to the progress bar
+                emit(UserRatingUiModel(id, details.title ?: "", stars, imageUrl))
             }
         }
     }
@@ -40,10 +39,18 @@ class UserRatingViewModel @ViewModelInject constructor(
         }
     }
 
-    fun addUserRating(stars: Byte) {
+    fun onRatingChanged(stars: Byte) {
         _id.value?.let { id ->
             viewModelScope.launch {
                 addUserRatingUseCase(id, stars)
+            }
+        }
+    }
+
+    fun onRatingRemoved() {
+        _id.value?.let { id ->
+            viewModelScope.launch {
+                deleteUserRatingUseCase(id)
             }
         }
     }
