@@ -13,7 +13,7 @@ fun MoobiesTheme(
     val (colors, type, shapes) = createMdcTheme(context)
     MaterialTheme(
         colors = colors ?: MaterialTheme.colors,
-        typography = type ?: MaterialTheme.typography,
+        typography = MoobiesTypography,
         shapes = shapes ?: MaterialTheme.shapes,
         content = content
     )

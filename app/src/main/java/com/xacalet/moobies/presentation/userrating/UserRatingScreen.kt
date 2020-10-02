@@ -2,8 +2,7 @@ package com.xacalet.moobies.presentation.userrating
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.ColumnScope.align
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Box as Box
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -15,10 +14,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawShadow
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ContextAmbient
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,11 +25,11 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.ui.tooling.preview.Preview
 import coil.request.ImageRequest
 import coil.transform.BlurTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.ui.*
 import dev.chrisbanes.accompanist.coil.CoilImage
 
+@ExperimentalMaterialApi
 @Composable
 fun UserRatingScreen(
     showId: Long,
@@ -59,12 +58,11 @@ fun UserRatingScreen(
                     onClose()
                 }
             )
-        } ?: Box(modifier = Modifier.wrapContentSize(Alignment.Center)) {
-            CircularProgressIndicator()
-        }
+        } ?: CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun UserRatingScreenContent(
     data: UserRatingUiModel,
@@ -72,19 +70,21 @@ fun UserRatingScreenContent(
     onRatingChanged: (Byte) -> Unit,
     onRatingRemoved: () -> Unit
 ) {
-    val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val (stars, onStarsChanged) = remember { mutableStateOf(data.stars) }
 
-    BottomDrawerLayout(
-        drawerState = drawerState,
-        gesturesEnabled = false,
-        drawerContent = {
-            OtherRatedTitlesDrawerContent(drawerState = drawerState, stars = stars)
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            BottomSheetContent(
+                sheetState = sheetState,
+                stars = stars
+            )
         },
-        drawerBackgroundColor = Gray900,
-        drawerContentColor = ContentColorAmbient.current
+        sheetBackgroundColor = Gray900,
+        sheetContentColor = ContentColorAmbient.current
     ) {
-        Stack {
+        Box {
             CoilImage(
                 modifier = Modifier.matchParentSize(),
                 request = ImageRequest.Builder(ContextAmbient.current)
@@ -93,7 +93,7 @@ fun UserRatingScreenContent(
                     .build(),
                 contentScale = ContentScale.Crop
             )
-            Box(
+            Spacer(
                 modifier = Modifier
                     .matchParentSize()
                     .verticalGradientBackground(listOf(Color(0x40000000), Color(0xE0000000)))
@@ -108,7 +108,7 @@ fun UserRatingScreenContent(
                     modifier = Modifier
                         .weight(1F)
                         .fillMaxHeight(),
-                    gravity = Alignment.Center
+                    alignment = Alignment.Center
                 ) {
                     if (stars != null) {
                         Text(
@@ -184,7 +184,7 @@ fun UserRatingScreenContent(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     stars = stars
                 ) {
-                    IconButton(onClick = { drawerState.open() }) {
+                    IconButton(onClick = { sheetState.show() }) {
                         Icon(Icons.Default.KeyboardArrowUp)
                     }
                 }
@@ -239,7 +239,7 @@ fun StarRatingInput(
                 modifier = Modifier
                     .weight(1F)
                     .clickable(onClick = { onRatingChanged(index.toByte()) }),
-                gravity = Alignment.Center
+                alignment = Alignment.Center
             ) {
                 Image(
                     asset = Icons.Default.Star,
@@ -259,7 +259,7 @@ fun StarRatingInput(
 fun OtherRatedTitlesHeader(
     modifier: Modifier = Modifier,
     stars: Byte,
-    actionButton: @Composable () -> Unit
+    actionButton: @Composable BoxScope.() -> Unit
 ) {
     Row(
         modifier = modifier
@@ -269,37 +269,42 @@ fun OtherRatedTitlesHeader(
             .padding(start = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(stringResource(R.string.other_titles_you_rated_x_y, stars ?: 0, 10))
+        Text(stringResource(R.string.other_titles_you_rated_x_y, stars, 10))
         Box(
             modifier = Modifier.fillMaxWidth(),
-            gravity = Alignment.CenterEnd,
-            children = actionButton
-        )
-    }
-}
-
-@Composable
-fun OtherRatedTitlesDrawerContent(
-    drawerState: BottomDrawerState,
-    stars: Byte?
-) {
-    OtherRatedTitlesHeader(
-        stars = stars ?: 0,
-        modifier = Modifier.drawShadow(2.dp)
-    ) {
-        IconButton(onClick = { drawerState.close() }) {
-            Icon(Icons.Default.KeyboardArrowDown)
+            alignment = Alignment.CenterEnd
+        ) {
+            actionButton()
         }
     }
-    // TODO: Find the way to center text.
-    Spacer(Modifier.preferredHeight(128.dp))
-    // TODO: Display titles with the same rating.
-    Text(
-        modifier = Modifier.align(Alignment.CenterHorizontally),
-        text = stringResource(R.string.no_other_titles_with_this_rating)
-    )
 }
 
+@ExperimentalMaterialApi
+@Composable
+internal fun BottomSheetContent(
+    sheetState: ModalBottomSheetState,
+    stars: Byte?
+) {
+    Column {
+        OtherRatedTitlesHeader(
+            stars = stars ?: 0,
+            modifier = Modifier.drawShadow(2.dp)
+        ) {
+            IconButton(onClick = { sheetState.hide() }) {
+                Icon(Icons.Default.KeyboardArrowDown)
+            }
+        }
+        // TODO: Display titles with the same rating.
+        Box(
+            modifier = Modifier.preferredHeight(64.dp),
+            alignment = Alignment.Center
+        ) {
+            Text(stringResource(R.string.no_other_titles_with_this_rating))
+        }
+    }
+}
+
+@ExperimentalMaterialApi
 @Composable
 @Preview(showBackground = true)
 fun PreviewUserRatingScreen() {
@@ -324,4 +329,3 @@ fun PreviewStarRatingInput() {
     val (rating, onRatingChanged) = remember { mutableStateOf<Byte?>(null) }
     StarRatingInput(rating, onRatingChanged)
 }
-

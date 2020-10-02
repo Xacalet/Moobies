@@ -87,8 +87,10 @@ dependencies {
     kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
 
     // Jetpack compose
+    implementation("androidx.compose.compiler:compiler:${Versions.AndroidX.compose}")
     implementation("androidx.compose.foundation:foundation:${Versions.AndroidX.compose}")
     implementation("androidx.compose.material:material:${Versions.AndroidX.compose}")
+    implementation("androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}")
     implementation("androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}")
     implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
     implementation("androidx.ui:ui-tooling:${Versions.AndroidX.compose}")

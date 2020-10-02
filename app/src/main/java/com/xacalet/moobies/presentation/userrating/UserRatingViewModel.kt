@@ -27,7 +27,7 @@ class UserRatingViewModel @ViewModelInject constructor(
                     getImageUrlUseCase(500, filePath)
                 }
                 val stars = getUserRatingUseCase(id)
-                //delay(1000) //Just to give visibility to the progress bar
+                delay(1000) //Just to give visibility to the progress bar
                 emit(UserRatingUiModel(id, details.title ?: "", stars, imageUrl))
             }
         }

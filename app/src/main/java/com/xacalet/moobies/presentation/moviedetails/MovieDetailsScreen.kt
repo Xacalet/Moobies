@@ -2,6 +2,7 @@ package com.xacalet.moobies.presentation.moviedetails
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box as Box
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,13 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.ui.tooling.preview.Devices
 import androidx.ui.tooling.preview.Preview
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
-import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.time.LocalDate
 
@@ -86,7 +87,7 @@ fun MovieDetailsScreen(
 fun DetailHeader(
     imageUrl: String?,
     titleText: String,
-    subtitleSlot: @Composable () -> Unit
+    subtitleSlot: @Composable BoxScope.() -> Unit
 ) {
     ConstraintLayout {
         val (image, title, subtitle, button) = createRefs()
@@ -124,9 +125,10 @@ fun DetailHeader(
             modifier = Modifier.constrainAs(subtitle) {
                 start.linkTo(parent.start, margin = 16.dp)
                 top.linkTo(title.bottom, margin = 4.dp)
-            },
-            children = subtitleSlot
-        )
+            }
+        ) {
+            subtitleSlot()
+        }
     }
 }
 
@@ -137,9 +139,10 @@ fun DetailOverview(
     descriptionText: String
 ) {
     Column {
-        ConstraintLayout(Modifier
-            .padding(top = 16.dp, start = 16.dp)
-            .fillMaxWidth()
+        ConstraintLayout(
+            Modifier
+                .padding(top = 16.dp, start = 16.dp)
+                .fillMaxWidth()
         ) {
             val (image, genreList, overview, button) = createRefs()
             CoilImage(
@@ -226,7 +229,19 @@ fun WishlistTextButton(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(
+    name = "Detail screen in Default",
+    showBackground = true,
+    showDecoration = true,
+    device = Devices.PIXEL_3A
+)
+@Preview(
+    name = "Detail screen in Spanish",
+    showBackground = true,
+    showDecoration = true,
+    locale = "es",
+    device = Devices.PIXEL_3A
+)
 fun PreviewDetailsScreen() {
     val movie = MovieDetails(
         id = 0,
@@ -246,13 +261,13 @@ fun PreviewDetailsScreen() {
     val posterImageUrl: State<String?> = remember { mutableStateOf("") }
     val userRating: State<Byte?> = remember { mutableStateOf(6) }
     MovieDetailsScreen(
-            movie = movie,
-            backdropImageUrl = backdropImageUrl,
-            posterImageUrl = posterImageUrl,
-            isWishlisted = isWishlisted,
-            userRating = userRating,
-            onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
-            onUserRatingClicked = {}
-        )
+        movie = movie,
+        backdropImageUrl = backdropImageUrl,
+        posterImageUrl = posterImageUrl,
+        isWishlisted = isWishlisted,
+        userRating = userRating,
+        onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
+        onUserRatingClicked = {}
+    )
 }
 

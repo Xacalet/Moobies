@@ -1,10 +1,8 @@
 package com.xacalet.moobies.presentation.moviedetails.ui
 
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.RowScope.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.EmphasisAmbient
@@ -12,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.runtime.*
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -41,16 +40,24 @@ fun RatingSection(
 ) {
     Row {
         //Popular rating
-        RatingItemButton(onClick = { /* Does nothing */ }) {
+        RatingItemButton(
+            modifier = Modifier.weight(1F),
+            onClick = { /* Does nothing */ }
+        ) {
             StarredRatingItem(
+                modifier = Modifier.weight(1F),
                 rating = voteAverage.toFloat(),
                 starColor = Yellow600,
                 subtitle = NumberFormat.getInstance().format(voteCount)
             )
         }
-        RatingItemButton(onClick = onUserRatingClick) {
+        RatingItemButton(
+            modifier = Modifier.weight(1F),
+            onClick = onUserRatingClick
+        ) {
             userRating.value?.let { stars ->
                 StarredRatingItem(
+                    modifier = Modifier.weight(1F),
                     rating = stars.toFloat(),
                     starColor = Blue400,
                     subtitle = stringResource(R.string.you),
@@ -67,12 +74,13 @@ fun RatingSection(
 
 @Composable
 fun RatingItemButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.weight(1F),
+        modifier = modifier,
         backgroundColor = Color.Transparent,
         shape = RoundedCornerShape(0.dp),
         elevation = 0.dp,
@@ -82,13 +90,14 @@ fun RatingItemButton(
 
 @Composable
 fun StarredRatingItem(
+    modifier: Modifier = Modifier,
     rating: Float,
     starColor: Color,
     subtitle: String,
     ratingFormatter: (Float) -> String = { value -> value.toString() },
 ) {
     Column(
-        modifier = Modifier.weight(1F),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -116,7 +125,7 @@ fun StarredRatingItem(
 fun PendingUserRatingItem() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
-            asset = Icons.Filled.Star,
+            asset = Icons.Outlined.StarOutline,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
             modifier = Modifier.size(32.dp)
         )
@@ -128,9 +137,19 @@ fun PendingUserRatingItem() {
 }
 
 @Composable
-@Preview(showBackground = true)
-fun PreviewReviewZone() {
+@Preview(name = "With user rating", showBackground = true)
+fun PreviewReviewZoneWithUserRating() {
     val stars: MutableState<Byte?> = remember { mutableStateOf(6) }
+    val onClick = {
+        stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
+    }
+    RatingSection(6.3, 1031, stars, onClick)
+}
+
+@Composable
+@Preview(name = "Without user rating", showBackground = true)
+fun PreviewReviewZoneWithoutUserRating() {
+    val stars: MutableState<Byte?> = remember { mutableStateOf(null) }
     val onClick = {
         stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
     }
