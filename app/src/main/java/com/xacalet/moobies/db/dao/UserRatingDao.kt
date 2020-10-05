@@ -21,4 +21,7 @@ interface UserRatingDao {
 
     @Query("DELETE FROM user_rating WHERE id = :id")
     suspend fun delete(id: Long)
+
+    @Query("SELECT id FROM user_rating WHERE stars = :rating")
+    fun getByRating(rating: Byte): List<Long>
 }

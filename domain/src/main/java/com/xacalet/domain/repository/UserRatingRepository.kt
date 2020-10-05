@@ -11,4 +11,6 @@ interface UserRatingRepository {
     fun getUserRatingFlow(id: Long): Flow<Byte?>
 
     suspend fun getUserRating(id: Long): Byte?
+
+    suspend fun getTitlesByRating(rating: Byte): List<Long>
 }

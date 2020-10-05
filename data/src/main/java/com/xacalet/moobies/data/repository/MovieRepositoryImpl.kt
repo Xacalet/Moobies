@@ -1,10 +1,10 @@
-package com.xacalet.data.repository
+package com.xacalet.moobies.data.repository
 
-import com.xacalet.data.datasource.MovieDataSource
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.model.PaginatedList
 import com.xacalet.domain.repository.MovieRepository
+import com.xacalet.moobies.data.datasource.MovieDataSource
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(

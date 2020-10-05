@@ -1,4 +1,4 @@
-package com.xacalet.data.datasource
+package com.xacalet.moobies.data.datasource
 
 import kotlinx.coroutines.flow.Flow
 
@@ -11,4 +11,6 @@ interface UserRatingDataSource {
     fun getUserRatingFlow(id: Long): Flow<Byte?>
 
     suspend fun getUserRating(id: Long): Byte?
+
+    suspend fun getTitlesByRating(rating: Byte): List<Long>
 }

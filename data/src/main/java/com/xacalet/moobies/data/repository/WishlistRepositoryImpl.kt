@@ -1,6 +1,6 @@
-package com.xacalet.data.repository
+package com.xacalet.moobies.data.repository
 
-import com.xacalet.data.datasource.WishlistDataSource
+import com.xacalet.moobies.data.datasource.WishlistDataSource
 import com.xacalet.domain.repository.WishlistRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

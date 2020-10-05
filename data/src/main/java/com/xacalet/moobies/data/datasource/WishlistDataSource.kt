@@ -1,4 +1,4 @@
-package com.xacalet.data.datasource
+package com.xacalet.moobies.data.datasource
 
 import kotlinx.coroutines.flow.Flow
 

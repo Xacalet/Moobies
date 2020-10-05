@@ -1,9 +1,9 @@
 package com.xacalet.moobies.di
 
-import com.xacalet.data.repository.GenreRepositoryImpl
-import com.xacalet.data.repository.MovieRepositoryImpl
-import com.xacalet.data.repository.UserRatingRepositoryImpl
-import com.xacalet.data.repository.WishlistRepositoryImpl
+import com.xacalet.moobies.data.repository.GenreRepositoryImpl
+import com.xacalet.moobies.data.repository.MovieRepositoryImpl
+import com.xacalet.moobies.data.repository.UserRatingRepositoryImpl
+import com.xacalet.moobies.data.repository.WishlistRepositoryImpl
 import com.xacalet.domain.repository.GenreRepository
 import com.xacalet.domain.repository.MovieRepository
 import com.xacalet.domain.repository.UserRatingRepository

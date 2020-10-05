@@ -1,6 +1,6 @@
-package com.xacalet.data.repository
+package com.xacalet.moobies.data.repository
 
-import com.xacalet.data.datasource.GenreDataSource
+import com.xacalet.moobies.data.datasource.GenreDataSource
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.repository.GenreRepository
 import javax.inject.Inject

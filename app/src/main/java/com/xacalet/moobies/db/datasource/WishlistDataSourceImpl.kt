@@ -1,6 +1,6 @@
 package com.xacalet.moobies.db.datasource
 
-import com.xacalet.data.datasource.WishlistDataSource
+import com.xacalet.moobies.data.datasource.WishlistDataSource
 import com.xacalet.moobies.db.dao.WishlistDao
 import com.xacalet.moobies.db.model.WishlistDbModel
 import kotlinx.coroutines.flow.Flow

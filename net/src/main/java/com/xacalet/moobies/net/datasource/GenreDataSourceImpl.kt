@@ -1,6 +1,6 @@
 package com.xacalet.moobies.net.datasource
 
-import com.xacalet.data.datasource.GenreDataSource
+import com.xacalet.moobies.data.datasource.GenreDataSource
 import com.xacalet.domain.model.Genre
 import com.xacalet.moobies.net.api.service.GenreApiService
 import com.xacalet.moobies.net.mapper.toEntity

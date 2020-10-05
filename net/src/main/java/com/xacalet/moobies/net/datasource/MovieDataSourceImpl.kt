@@ -1,6 +1,6 @@
 package com.xacalet.moobies.net.datasource
 
-import com.xacalet.data.datasource.MovieDataSource
+import com.xacalet.moobies.data.datasource.MovieDataSource
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.model.PaginatedList

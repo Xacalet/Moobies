@@ -1,9 +1,9 @@
 package com.xacalet.moobies.di
 
-import com.xacalet.data.datasource.GenreDataSource
-import com.xacalet.data.datasource.MovieDataSource
-import com.xacalet.data.datasource.UserRatingDataSource
-import com.xacalet.data.datasource.WishlistDataSource
+import com.xacalet.moobies.data.datasource.GenreDataSource
+import com.xacalet.moobies.data.datasource.MovieDataSource
+import com.xacalet.moobies.data.datasource.UserRatingDataSource
+import com.xacalet.moobies.data.datasource.WishlistDataSource
 import com.xacalet.moobies.db.datasource.UserRatingDataSourceImpl
 import com.xacalet.moobies.db.datasource.WishlistDataSourceImpl
 import com.xacalet.moobies.net.datasource.GenreDataSourceImpl

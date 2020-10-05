@@ -1,6 +1,6 @@
 package com.xacalet.moobies.db.datasource
 
-import com.xacalet.data.datasource.UserRatingDataSource
+import com.xacalet.moobies.data.datasource.UserRatingDataSource
 import com.xacalet.moobies.db.dao.UserRatingDao
 import com.xacalet.moobies.db.model.UserRatingDbModel
 import kotlinx.coroutines.flow.Flow
@@ -21,4 +21,7 @@ class UserRatingDataSourceImpl @Inject constructor(
     override fun getUserRatingFlow(id: Long): Flow<Byte?> = userRatingDao.getByIdFlow(id)
 
     override suspend fun getUserRating(id: Long): Byte? = userRatingDao.getById(id)
+
+    override suspend fun getTitlesByRating(rating: Byte): List<Long> =
+        userRatingDao.getByRating(rating)
 }
