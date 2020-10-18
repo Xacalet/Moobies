@@ -1,13 +1,13 @@
 package com.xacalet.moobies.presentation.userrating
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.xacalet.domain.di.IoDispatcher
-import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.usecase.*
-import kotlinx.coroutines.*
+import com.xacalet.moobies.presentation.components.SimpleShowListData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class UserRatingViewModel @ViewModelInject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
@@ -23,8 +23,9 @@ class UserRatingViewModel @ViewModelInject constructor(
     var data: LiveData<UserRatingUiModel>
         private set
 
-    private val _otherTitlesWithSameRating = mutableStateOf<List<MovieDetails>?>(emptyList())
-    val otherTitlesWithSameRating: State<List<MovieDetails>?> = _otherTitlesWithSameRating
+    private val _otherRatedShows =
+        MutableLiveData<GetOtherRatedShowsState>(GetOtherRatedShowsState.Loading)
+    val otherRatedShows: LiveData<GetOtherRatedShowsState> = _otherRatedShows
 
     init {
         data = _id.switchMap { id ->
@@ -34,7 +35,6 @@ class UserRatingViewModel @ViewModelInject constructor(
                     getImageUrlUseCase(500, filePath)
                 }
                 val stars = getUserRatingUseCase(id)
-                delay(1000) //Just to give visibility to the progress bar
                 emit(UserRatingUiModel(id, details.title ?: "", stars, imageUrl))
             }
         }
@@ -48,7 +48,7 @@ class UserRatingViewModel @ViewModelInject constructor(
 
     fun onRatingChanged(stars: Byte) {
         _id.value?.let { id ->
-            viewModelScope.launch {
+            viewModelScope.launch(ioDispatcher) {
                 addUserRatingUseCase(id, stars)
             }
         }
@@ -56,18 +56,33 @@ class UserRatingViewModel @ViewModelInject constructor(
 
     fun onRatingRemoved() {
         _id.value?.let { id ->
-            viewModelScope.launch {
+            viewModelScope.launch(ioDispatcher) {
                 deleteUserRatingUseCase(id)
             }
         }
     }
 
-    fun setUserRating(rating: Byte) {
+    fun fetchOtherRatedShows(id: Long, rating: Byte, posterWidth: Int) {
+        // TODO: This seems to be executing more times than expected.
         viewModelScope.launch(ioDispatcher) {
-            val movies = withContext(ioDispatcher) {
-                getMoviesByUserRatingUseCase(rating)
-            }
-            _otherTitlesWithSameRating.value = movies.filter { it.id != _id.value }
+            val result = getMoviesByUserRatingUseCase(rating)
+                .filter { it.id != id }
+                .map { show ->
+                    val imageUrl = getImageUrlUseCase(posterWidth, show.posterPath ?: "")
+                    SimpleShowListData(
+                        id = show.id,
+                        imageUrl = imageUrl,
+                        title = show.title ?: "",
+                        year = show.releaseDate?.year?.toString() ?: ""
+                    )
+                }
+            delay(1000) //Just to give visibility to the progress bar
+            _otherRatedShows.postValue(GetOtherRatedShowsState.Result(result))
         }
     }
+}
+
+sealed class GetOtherRatedShowsState {
+    object Loading : GetOtherRatedShowsState()
+    data class Result(val shows: List<SimpleShowListData>) : GetOtherRatedShowsState()
 }

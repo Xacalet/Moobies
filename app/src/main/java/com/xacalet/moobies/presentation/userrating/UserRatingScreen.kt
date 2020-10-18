@@ -2,7 +2,6 @@ package com.xacalet.moobies.presentation.userrating
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Box as Box
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -10,6 +9,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +26,7 @@ import androidx.ui.tooling.preview.Preview
 import coil.request.ImageRequest
 import coil.transform.BlurTransformation
 import com.xacalet.moobies.R
+import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.ui.*
 import dev.chrisbanes.accompanist.coil.CoilImage
 
@@ -56,6 +57,10 @@ fun UserRatingScreen(
                 onRatingRemoved = {
                     viewModel.onRatingRemoved()
                     onClose()
+                },
+                viewModel.otherRatedShows.observeAsState(GetOtherRatedShowsState.Loading),
+                onBottomSheetExpanded = { rating ->
+                    viewModel.fetchOtherRatedShows(showId, rating, 100)
                 }
             )
         } ?: CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
@@ -68,7 +73,9 @@ fun UserRatingScreenContent(
     data: UserRatingUiModel,
     onBack: () -> Unit,
     onRatingChanged: (Byte) -> Unit,
-    onRatingRemoved: () -> Unit
+    onRatingRemoved: () -> Unit,
+    otherShowsRated: State<GetOtherRatedShowsState>,
+    onBottomSheetExpanded: (Byte) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val (stars, onStarsChanged) = remember { mutableStateOf(data.stars) }
@@ -76,15 +83,17 @@ fun UserRatingScreenContent(
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
+            onBottomSheetExpanded(stars ?: 0)
             BottomSheetContent(
                 sheetState = sheetState,
-                stars = stars
+                stars = stars,
+                otherTitlesWithSameRating = otherShowsRated
             )
         },
         sheetBackgroundColor = Gray900,
         sheetContentColor = ContentColorAmbient.current
     ) {
-        Box {
+        Box(alignment = Alignment.TopStart) {
             CoilImage(
                 modifier = Modifier.matchParentSize(),
                 request = ImageRequest.Builder(ContextAmbient.current)
@@ -283,9 +292,10 @@ fun OtherRatedTitlesHeader(
 @Composable
 internal fun BottomSheetContent(
     sheetState: ModalBottomSheetState,
-    stars: Byte?
+    stars: Byte?,
+    otherTitlesWithSameRating: State<GetOtherRatedShowsState>
 ) {
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         OtherRatedTitlesHeader(
             stars = stars ?: 0,
             modifier = Modifier.drawShadow(2.dp)
@@ -294,15 +304,28 @@ internal fun BottomSheetContent(
                 Icon(Icons.Default.KeyboardArrowDown)
             }
         }
-        // TODO: Display titles with the same rating.
-        Box(
-            modifier = Modifier.preferredHeight(64.dp),
-            alignment = Alignment.Center
-        ) {
-            Text(stringResource(R.string.no_other_titles_with_this_rating))
+        when (val value = otherTitlesWithSameRating.value) {
+            is GetOtherRatedShowsState.Loading -> {
+                Box(Modifier.preferredHeight(64.dp), alignment = Alignment.Center) {
+                    CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
+                }
+            }
+            is GetOtherRatedShowsState.Result -> {
+                if (value.shows.isEmpty()) {
+                    Box(
+                        modifier = Modifier.preferredHeight(64.dp),
+                        alignment = Alignment.Center
+                    ) {
+                        Text(stringResource(R.string.no_other_titles_with_this_rating))
+                    }
+                } else {
+                    ShowSimpleList(value.shows) {}
+                }
+            }
         }
     }
 }
+
 
 @ExperimentalMaterialApi
 @Composable
@@ -317,7 +340,9 @@ fun PreviewUserRatingScreen() {
                 data = UserRatingUiModel(1, "Maze Runner: The Scorch Trials", 7, ""),
                 onBack = {},
                 onRatingChanged = {},
-                onRatingRemoved = {}
+                onRatingRemoved = {},
+                otherShowsRated = mutableStateOf(GetOtherRatedShowsState.Loading),
+                onBottomSheetExpanded = {}
             )
         }
     }

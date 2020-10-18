@@ -1,20 +1,22 @@
 package com.xacalet.moobies.presentation.userrating
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.usecase.*
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
+import com.xacalet.moobies.presentation.components.SimpleShowListData
+import com.xacalet.moobies.presentation.userrating.GetOtherRatedShowsState.Loading
+import com.xacalet.moobies.presentation.userrating.GetOtherRatedShowsState.Result
+import com.xacalet.moobies.testutils.LiveDataTestUtil.getOrAwaitValue
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDate
 
 class UserRatingViewModelTest {
 
@@ -55,23 +57,85 @@ class UserRatingViewModelTest {
             addUserRatingUseCase = addUserRatingUseCase,
             deleteUserRatingUseCase = deleteUserRatingUseCase,
             getMoviesByUserRatingUseCase = getMoviesByUserRatingUseCase,
-            ioDispatcher = TestCoroutineDispatcher()
+            ioDispatcher = Dispatchers.Unconfined
         )
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun `Setting rating returns a list of titles with the same rating`() {
-        val movie1 = mockk<MovieDetails>()
-        val movie2 = mockk<MovieDetails>()
-        val movie3 = mockk<MovieDetails>()
-        coEvery { movie1.id } returns 1L
-        coEvery { movie2.id } returns 2L
-        coEvery { movie3.id } returns 3L
-        coEvery { getMoviesByUserRatingUseCase(6) } returns listOf(movie1, movie2, movie3)
+    fun `setting id returns an instance of UserRatingUiModel`() = runBlockingTest {
+        coEvery { getMovieDetailsUseCase(42L) } returns mockk {
+            every { title } returns "The title"
+            every { posterPath } returns "p_42"
+        }
+        coEvery { getImageUrlUseCase(any(), "p_42") } returns "http://images/p_42"
+        coEvery { getUserRatingUseCase(42L) } returns 8
 
-        userRatingViewModel.setId(2L)
-        userRatingViewModel.setUserRating(6)
+        userRatingViewModel.setId(42L)
 
-        assertEquals(listOf(movie1, movie3), userRatingViewModel.otherTitlesWithSameRating.value)
+        val expectedResult = UserRatingUiModel(
+            showId = 42L,
+            showName = "The title",
+            stars = 8,
+            poserImageUrl = "http://images/p_42"
+        )
+
+        assertEquals(expectedResult, userRatingViewModel.data.getOrAwaitValue())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `setting rating returns a list of titles with the same rating`() = runBlockingTest {
+        coEvery { getMoviesByUserRatingUseCase(6) } returns (1..3).map {
+            mockk {
+                every { id } returns it.toLong()
+                every { posterPath } returns "p_$it"
+                every { title } returns "title_$it"
+                every { releaseDate } returns LocalDate.of(2000 + it, 1, 1)
+            }
+        }
+        (1..3).forEach {
+            coEvery { getImageUrlUseCase(any(), "p_$it") } returns "http://images/p_$it"
+        }
+
+        userRatingViewModel.fetchOtherRatedShows(2L, 6, 90)
+
+        assertEquals(Loading, userRatingViewModel.otherRatedShows.getOrAwaitValue())
+
+        val expectedResult = Result(listOf(1, 3).map {
+            SimpleShowListData(
+                id = it.toLong(),
+                imageUrl = "http://images/p_$it",
+                title = "title_$it",
+                year = 2000.plus(it).toString()
+            )
+        })
+
+        // If live data emits multiple values,
+        Thread.sleep(1000)
+
+        assertEquals(expectedResult, userRatingViewModel.otherRatedShows.getOrAwaitValue())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `calling onRatingChanged runs addUserRatingUseCase`() {
+        coEvery { addUserRatingUseCase(any(), any()) } just Runs
+
+        userRatingViewModel.setId(42L)
+        userRatingViewModel.onRatingChanged(8)
+
+        coVerifySequence { addUserRatingUseCase(42L, 8) }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `calling onRatingRemoved runs deleteUserRatingUseCase`() {
+        coEvery { deleteUserRatingUseCase(any()) } just Runs
+
+        userRatingViewModel.setId(42L)
+        userRatingViewModel.onRatingRemoved()
+
+        coVerifySequence { deleteUserRatingUseCase(42L) }
     }
 }

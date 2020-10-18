@@ -1,9 +1,9 @@
 package com.xacalet.moobies.net.datasource
 
-import com.xacalet.moobies.data.datasource.MovieDataSource
 import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.model.PaginatedList
+import com.xacalet.moobies.data.datasource.MovieDataSource
 import com.xacalet.moobies.net.api.service.MovieApiService
 import com.xacalet.moobies.net.mapper.toEntity
 import com.xacalet.moobies.net.mapper.toEntityList

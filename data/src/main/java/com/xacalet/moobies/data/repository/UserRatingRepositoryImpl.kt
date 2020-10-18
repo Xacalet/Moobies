@@ -1,7 +1,7 @@
 package com.xacalet.moobies.data.repository
 
-import com.xacalet.moobies.data.datasource.UserRatingDataSource
 import com.xacalet.domain.repository.UserRatingRepository
+import com.xacalet.moobies.data.datasource.UserRatingDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

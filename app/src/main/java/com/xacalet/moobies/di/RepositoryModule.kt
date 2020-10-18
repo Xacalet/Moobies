@@ -1,13 +1,13 @@
 package com.xacalet.moobies.di
 
-import com.xacalet.moobies.data.repository.GenreRepositoryImpl
-import com.xacalet.moobies.data.repository.MovieRepositoryImpl
-import com.xacalet.moobies.data.repository.UserRatingRepositoryImpl
-import com.xacalet.moobies.data.repository.WishlistRepositoryImpl
 import com.xacalet.domain.repository.GenreRepository
 import com.xacalet.domain.repository.MovieRepository
 import com.xacalet.domain.repository.UserRatingRepository
 import com.xacalet.domain.repository.WishlistRepository
+import com.xacalet.moobies.data.repository.GenreRepositoryImpl
+import com.xacalet.moobies.data.repository.MovieRepositoryImpl
+import com.xacalet.moobies.data.repository.UserRatingRepositoryImpl
+import com.xacalet.moobies.data.repository.WishlistRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable

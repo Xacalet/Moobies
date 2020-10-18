@@ -1,11 +1,13 @@
 package com.xacalet.domain.usecase
 
 import com.xacalet.domain.di.IoDispatcher
-import com.xacalet.domain.model.Movie
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.repository.MovieRepository
 import com.xacalet.domain.repository.UserRatingRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
