@@ -2,8 +2,9 @@ package com.xacalet.moobies.presentation.moviedetails
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Box as Box
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.ui.tooling.preview.Devices
 import androidx.ui.tooling.preview.Preview
 import com.xacalet.domain.model.Genre
@@ -49,7 +51,7 @@ fun MovieDetailsScreen(
                 ) {
                     Row {
                         ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                            ProvideEmphasis(EmphasisAmbient.current.medium) {
+                            ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
                                 Text(movie.releaseDate?.year?.toString() ?: "")
                                 val runtime = movie.runtime.let {
                                     "${it.div(60)}h ${it % 60}min"
@@ -171,13 +173,13 @@ fun DetailOverview(
                         Button(
                             onClick = {},
                             modifier = Modifier.padding(end = 8.dp),
-                            elevation = 0.dp,
-                            backgroundColor = Color.Transparent,
+                            colors = ButtonConstants.defaultOutlinedButtonColors(
+                                contentColor = MaterialTheme.colors.onSurface
+                            ),
                             border = BorderStroke(
                                 1.dp,
                                 MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
-                            ),
-                            contentColor = MaterialTheme.colors.onSurface
+                            )
                         ) {
                             Text(
                                 text = text,
@@ -204,13 +206,28 @@ fun WishlistTextButton(
     isWishlisted: State<Boolean>,
     onWishlistToggled: () -> Unit
 ) {
+    val interactionState: InteractionState = remember { InteractionState() }
+    if (isWishlisted.value) {
+        interactionState.addInteraction(Interaction.Pressed)
+    } else {
+        interactionState.removeInteraction(Interaction.Pressed)
+    }
     Button(
         onClick = onWishlistToggled,
-        modifier = modifier,
-        elevation = 0.dp,
+        modifier = modifier.zIndex(0F),
         border = BorderStroke(1.dp, LightBlue700),
-        backgroundColor = if (isWishlisted.value) Color.Transparent else LightBlue700,
-        contentColor = if (isWishlisted.value) MaterialTheme.colors.onSurface else Color.White
+        interactionState = interactionState,
+        elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
+        colors = if (isWishlisted.value) {
+            ButtonConstants.defaultOutlinedButtonColors(
+                contentColor = MaterialTheme.colors.onSurface
+            )
+        } else {
+            ButtonConstants.defaultButtonColors(
+                backgroundColor = LightBlue700,
+                contentColor = Color.White
+            )
+        }
     ) {
         Row(
             modifier = Modifier

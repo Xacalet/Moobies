@@ -65,6 +65,7 @@ class UserRatingViewModel @ViewModelInject constructor(
     fun fetchOtherRatedShows(id: Long, rating: Byte, posterWidth: Int) {
         // TODO: This seems to be executing more times than expected.
         viewModelScope.launch(ioDispatcher) {
+            _otherRatedShows.postValue(GetOtherRatedShowsState.Loading)
             val result = getMoviesByUserRatingUseCase(rating)
                 .filter { it.id != id }
                 .map { show ->

@@ -2,17 +2,18 @@ package com.xacalet.moobies.presentation.moviedetails.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.EmphasisAmbient
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.AmbientEmphasisLevels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.runtime.*
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,64 +41,43 @@ fun RatingSection(
 ) {
     Row {
         //Popular rating
-        RatingItemButton(
+        StarredRatingItem(
             modifier = Modifier.weight(1F),
-            onClick = { /* Does nothing */ }
-        ) {
+            rating = voteAverage.toFloat(),
+            starColor = Yellow600,
+            subtitle = NumberFormat.getInstance().format(voteCount)
+        )
+        userRating.value?.let { stars ->
             StarredRatingItem(
                 modifier = Modifier.weight(1F),
-                rating = voteAverage.toFloat(),
-                starColor = Yellow600,
-                subtitle = NumberFormat.getInstance().format(voteCount)
+                onClick = onUserRatingClick,
+                rating = stars.toFloat(),
+                starColor = Blue400,
+                subtitle = stringResource(R.string.you),
+                ratingFormatter = { rating ->
+                    rating.toInt().toString()
+                }
             )
-        }
-        RatingItemButton(
+        } ?: PendingUserRatingItem(
             modifier = Modifier.weight(1F),
             onClick = onUserRatingClick
-        ) {
-            userRating.value?.let { stars ->
-                StarredRatingItem(
-                    modifier = Modifier.weight(1F),
-                    rating = stars.toFloat(),
-                    starColor = Blue400,
-                    subtitle = stringResource(R.string.you),
-                    ratingFormatter = { rating ->
-                        rating.toInt().toString()
-                    }
-                )
-            } ?: PendingUserRatingItem()
-        }
+        )
         //Review
         Box(Modifier.weight(1F))
     }
 }
 
 @Composable
-fun RatingItemButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        backgroundColor = Color.Transparent,
-        shape = RoundedCornerShape(0.dp),
-        elevation = 0.dp,
-        content = content
-    )
-}
-
-@Composable
 fun StarredRatingItem(
     modifier: Modifier = Modifier,
     rating: Float,
+    onClick: () -> Unit = {},
     starColor: Color,
     subtitle: String,
     ratingFormatter: (Float) -> String = { value -> value.toString() },
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -115,15 +95,21 @@ fun StarredRatingItem(
                 }
             }
         )
-        ProvideEmphasis(EmphasisAmbient.current.medium) {
+        ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
             Text(subtitle, style = MaterialTheme.typography.body1)
         }
     }
 }
 
 @Composable
-fun PendingUserRatingItem() {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun PendingUserRatingItem(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Column(
+        modifier = modifier.clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Image(
             asset = Icons.Outlined.StarOutline,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),

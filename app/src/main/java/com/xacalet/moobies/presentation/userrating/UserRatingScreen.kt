@@ -3,6 +3,7 @@ package com.xacalet.moobies.presentation.userrating
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -91,7 +92,7 @@ fun UserRatingScreenContent(
             )
         },
         sheetBackgroundColor = Gray900,
-        sheetContentColor = ContentColorAmbient.current
+        sheetContentColor = AmbientContentColor.current
     ) {
         Box(alignment = Alignment.TopStart) {
             CoilImage(
@@ -157,9 +158,11 @@ fun UserRatingScreenContent(
                         Button(
                             onClick = { stars?.let(onRatingChanged) },
                             enabled = stars != null,
-                            backgroundColor = Color.DarkGray,
-                            contentColor = ContentColorAmbient.current,
-                            elevation = 0.dp,
+                            colors = ButtonConstants.defaultButtonColors(
+                                backgroundColor = Color.DarkGray,
+                                contentColor = AmbientContentColor.current
+                            ),
+                            elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
@@ -172,12 +175,14 @@ fun UserRatingScreenContent(
                             Spacer(Modifier.preferredSize(16.dp))
                             Button(
                                 onClick = { onRatingRemoved() },
-                                backgroundColor = Color.Transparent,
-                                contentColor = ContentColorAmbient.current,
-                                elevation = 0.dp,
+                                colors = ButtonConstants.defaultButtonColors(
+                                    backgroundColor = Color.Transparent,
+                                    contentColor = AmbientContentColor.current
+                                ),
+                                elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
                                 modifier = Modifier.wrapContentWidth()
                             ) {
-                                ProvideEmphasis(EmphasisAmbient.current.medium) {
+                                ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
                                     Text(
                                         text = stringResource(R.string.remove_rating).toUpperCase(),
                                         style = MaterialTheme.typography.subtitle1
@@ -227,7 +232,11 @@ fun UserRatingTopBar(
             Switch(
                 checked = switchState,
                 onCheckedChange = { switchState = !switchState },
-                color = Yellow600
+                colors = SwitchConstants.defaultColors(
+                    checkedThumbColor = MaterialTheme.colors.primary,
+                    uncheckedThumbColor = Color.LightGray,
+                    uncheckedTrackColor = Color.LightGray
+                )
             )
         }
     }

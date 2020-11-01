@@ -58,7 +58,9 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":net"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}") {
+        because("Required for using Time API if minimum Android SDK is below 26")
+    }
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
@@ -72,8 +74,8 @@ dependencies {
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.dagger_hilt_jetpack}")
     kapt("androidx.hilt:hilt-compiler:${Versions.dagger_hilt_jetpack}")
 
-    implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appCompat}")
-    implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
+    implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}")
+    implementation("androidx.cardview:cardview:${Versions.AndroidX.cardview}")
     implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
     implementation("androidx.core:core-ktx:${Versions.AndroidX.core}")
     implementation("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
@@ -81,7 +83,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}")
     implementation("androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}")
-    implementation("androidx.paging:paging-runtime:${Versions.AndroidX.pagination}")
+    implementation("androidx.paging:paging-runtime:${Versions.AndroidX.paging}")
     implementation("androidx.room:room-ktx:${Versions.AndroidX.room}")
     implementation("androidx.room:room-runtime:${Versions.AndroidX.room}")
     kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
