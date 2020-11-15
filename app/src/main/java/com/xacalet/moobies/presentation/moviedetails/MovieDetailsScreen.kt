@@ -1,18 +1,19 @@
 package com.xacalet.moobies.presentation.moviedetails
 
+import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
 import androidx.compose.material.Icon
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,7 @@ import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
+import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.time.LocalDate
 
@@ -51,7 +53,7 @@ fun MovieDetailsScreen(
                 ) {
                     Row {
                         ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                            ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
+                            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
                                 Text(movie.releaseDate?.year?.toString() ?: "")
                                 val runtime = movie.runtime.let {
                                     "${it.div(60)}h ${it % 60}min"
@@ -146,7 +148,7 @@ fun DetailOverview(
                 .padding(top = 16.dp, start = 16.dp)
                 .fillMaxWidth()
         ) {
-            val (image, genreList, overview, button) = createRefs()
+            val (image, genreList) = createRefs()
             CoilImage(
                 data = imageUrl ?: "",
                 contentScale = ContentScale.Crop,
@@ -257,34 +259,52 @@ fun WishlistTextButton(
     showBackground = true,
     showDecoration = true,
     locale = "es",
-    device = Devices.PIXEL_3A
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 fun PreviewDetailsScreen() {
-    val movie = MovieDetails(
-        id = 0,
-        backdropPath = "",
-        posterPath = "",
-        genres = listOf(Genre(1, "Drama"), Genre(2, "Action")),
-        originalTitle = "A movie title that is a bit long",
-        overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        releaseDate = LocalDate.now(),
-        runtime = 143,
-        title = "A movie title that is a bit long",
-        voteAverage = 8.3,
-        voteCount = 1234,
-    )
-    val isWishlisted = remember { mutableStateOf(true) }
-    val backdropImageUrl: State<String?> = remember { mutableStateOf("") }
-    val posterImageUrl: State<String?> = remember { mutableStateOf("") }
-    val userRating: State<Byte?> = remember { mutableStateOf(6) }
-    MovieDetailsScreen(
-        movie = movie,
-        backdropImageUrl = backdropImageUrl,
-        posterImageUrl = posterImageUrl,
-        isWishlisted = isWishlisted,
-        userRating = userRating,
-        onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
-        onUserRatingClicked = {}
-    )
+    MoobiesTheme {
+
+        val movie = MovieDetails(
+            id = 0,
+            backdropPath = "",
+            posterPath = "",
+            genres = listOf(Genre(1, "Drama"), Genre(2, "Action")),
+            originalTitle = "A movie title that is a bit long",
+            overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            releaseDate = LocalDate.now(),
+            runtime = 143,
+            title = "A movie title that is a bit long",
+            voteAverage = 8.3,
+            voteCount = 1234,
+        )
+        val isWishlisted = remember { mutableStateOf(true) }
+        val backdropImageUrl: State<String?> = remember { mutableStateOf("") }
+        val posterImageUrl: State<String?> = remember { mutableStateOf("") }
+        val userRating: State<Byte?> = remember { mutableStateOf(6) }
+        MovieDetailsScreen(
+            movie = movie,
+            backdropImageUrl = backdropImageUrl,
+            posterImageUrl = posterImageUrl,
+            isWishlisted = isWishlisted,
+            userRating = userRating,
+            onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
+            onUserRatingClicked = {}
+        )
+    }
 }
 
+@Composable
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun test() {
+    MoobiesTheme {
+        Surface {
+            Text(
+                text = "This is just a test 2",
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+    }
+}

@@ -1,15 +1,13 @@
 package com.xacalet.moobies.presentation.moviedetails.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.AmbientEmphasisLevels
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideEmphasis
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
@@ -28,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.ui.Blue400
+import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.Yellow600
 import java.text.NumberFormat
 import kotlin.random.Random
@@ -39,31 +38,33 @@ fun RatingSection(
     userRating: State<Byte?>,
     onUserRatingClick: () -> Unit = {}
 ) {
-    Row {
-        //Popular rating
-        StarredRatingItem(
-            modifier = Modifier.weight(1F),
-            rating = voteAverage.toFloat(),
-            starColor = Yellow600,
-            subtitle = NumberFormat.getInstance().format(voteCount)
-        )
-        userRating.value?.let { stars ->
+    Surface {
+        Row {
+            //Popular rating
             StarredRatingItem(
                 modifier = Modifier.weight(1F),
-                onClick = onUserRatingClick,
-                rating = stars.toFloat(),
-                starColor = Blue400,
-                subtitle = stringResource(R.string.you),
-                ratingFormatter = { rating ->
-                    rating.toInt().toString()
-                }
+                rating = voteAverage.toFloat(),
+                starColor = Yellow600,
+                subtitle = NumberFormat.getInstance().format(voteCount)
             )
-        } ?: PendingUserRatingItem(
-            modifier = Modifier.weight(1F),
-            onClick = onUserRatingClick
-        )
-        //Review
-        Box(Modifier.weight(1F))
+            userRating.value?.let { stars ->
+                StarredRatingItem(
+                    modifier = Modifier.weight(1F),
+                    onClick = onUserRatingClick,
+                    rating = stars.toFloat(),
+                    starColor = Blue400,
+                    subtitle = stringResource(R.string.you),
+                    ratingFormatter = { rating ->
+                        rating.toInt().toString()
+                    }
+                )
+            } ?: PendingUserRatingItem(
+                modifier = Modifier.weight(1F),
+                onClick = onUserRatingClick
+            )
+            //Review
+            Box(Modifier.weight(1F))
+        }
     }
 }
 
@@ -95,7 +96,7 @@ fun StarredRatingItem(
                 }
             }
         )
-        ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
+        Providers(AmbientContentAlpha provides ContentAlpha.medium) {
             Text(subtitle, style = MaterialTheme.typography.body1)
         }
     }
@@ -133,11 +134,16 @@ fun PreviewReviewZoneWithUserRating() {
 }
 
 @Composable
-@Preview(name = "Without user rating", showBackground = true)
+@Preview(
+    name = "Without user rating",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun PreviewReviewZoneWithoutUserRating() {
-    val stars: MutableState<Byte?> = remember { mutableStateOf(null) }
-    val onClick = {
-        stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
+    MoobiesTheme {
+        val stars: MutableState<Byte?> = remember { mutableStateOf(null) }
+        val onClick = {
+            stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
+        }
+        RatingSection(6.3, 1031, stars, onClick)
     }
-    RatingSection(6.3, 1031, stars, onClick)
 }

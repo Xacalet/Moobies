@@ -1,16 +1,19 @@
 package com.xacalet.moobies.presentation.components
 
-import androidx.compose.foundation.Text
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Divider
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
+import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
@@ -28,58 +31,62 @@ fun ShowSimpleListItem(
     show: SimpleShowListData,
     onClick: (Long) -> Unit = {}
 ) {
-    Column {
-        Row(
-            modifier = Modifier
-                .padding(4.dp)
-                .clickable(onClick = { onClick(show.id) }),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CoilImage(
-                data = show.imageUrl,
-                contentScale = ContentScale.Crop,
+    Surface {
+        Column {
+            Row(
                 modifier = Modifier
-                    .preferredWidth(54.dp)
-                    .preferredHeight(80.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1F)
-                    .padding(start = 8.dp),
-                verticalArrangement = Arrangement.Center
+                    .padding(4.dp)
+                    .clickable(onClick = { onClick(show.id) }),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(show.title)
-                Text(show.year)
+                CoilImage(
+                    data = show.imageUrl,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .preferredWidth(54.dp)
+                        .preferredHeight(80.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1F)
+                        .padding(start = 8.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(show.title)
+                    Text(show.year)
+                }
             }
+            Divider()
         }
-        Divider()
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewShowSimpleList() {
-    val data = listOf(
-        SimpleShowListData(
-            1,
-            "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
-            "Inglorious Bastards",
-            "2017"
-        ),
-        SimpleShowListData(
-            2,
-            "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
-            "Kill Bill: Volume 2",
-            "2004"
-        ),
-        SimpleShowListData(
-            3,
-            "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
-            "Inglorious Basterds",
-            "2009"
-        ),
-    )
-    ShowSimpleList(data) {}
+    MoobiesTheme {
+        val data = listOf(
+            SimpleShowListData(
+                1,
+                "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
+                "The Hateful Eight",
+                "2017"
+            ),
+            SimpleShowListData(
+                2,
+                "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
+                "Kill Bill: Volume 2",
+                "2004"
+            ),
+            SimpleShowListData(
+                3,
+                "https://image.tmdb.org/t/p/w92//4BgSWFMW2MJ0dT5metLzsRWO7IJ.jpg",
+                "Inglorious Basterds",
+                "2009"
+            ),
+        )
+        ShowSimpleList(data) {}
+    }
 }
 
 data class SimpleShowListData(

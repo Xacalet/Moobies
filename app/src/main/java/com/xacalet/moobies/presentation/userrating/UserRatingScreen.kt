@@ -1,9 +1,10 @@
 package com.xacalet.moobies.presentation.userrating
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -30,6 +31,7 @@ import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.ui.*
 import dev.chrisbanes.accompanist.coil.CoilImage
+import java.util.*
 
 @ExperimentalMaterialApi
 @Composable
@@ -166,7 +168,7 @@ fun UserRatingScreenContent(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = stringResource(R.string.rate).toUpperCase(),
+                                text = stringResource(R.string.rate).toUpperCase(Locale.getDefault()),
                                 style = MaterialTheme.typography.subtitle1
                             )
                         }
@@ -179,12 +181,14 @@ fun UserRatingScreenContent(
                                     backgroundColor = Color.Transparent,
                                     contentColor = AmbientContentColor.current
                                 ),
-                                elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
+                                elevation = ButtonConstants.defaultElevation(0.dp, 0.dp, 0.dp),
                                 modifier = Modifier.wrapContentWidth()
                             ) {
-                                ProvideEmphasis(AmbientEmphasisLevels.current.medium) {
+                                Providers(AmbientContentAlpha provides ContentAlpha.medium) {
                                     Text(
-                                        text = stringResource(R.string.remove_rating).toUpperCase(),
+                                        text = stringResource(R.string.remove_rating).toUpperCase(
+                                            Locale.getDefault()
+                                        ),
                                         style = MaterialTheme.typography.subtitle1
                                     )
                                 }
