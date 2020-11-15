@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":net"))
+    implementation(project(":utils"))
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}") {
         because("Required for using Time API if minimum Android SDK is below 26")
