@@ -1,15 +1,17 @@
 package com.xacalet.moobies.presentation.moviedetails
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.usecase.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieDetailsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,

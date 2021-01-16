@@ -1,15 +1,17 @@
 package com.xacalet.moobies.presentation.userrating
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.xacalet.domain.di.IoDispatcher
 import com.xacalet.domain.usecase.*
 import com.xacalet.moobies.presentation.components.SimpleShowListData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserRatingViewModel @ViewModelInject constructor(
+@HiltViewModel
+class UserRatingViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getUserRatingUseCase: GetUserRatingUseCase,

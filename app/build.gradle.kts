@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
@@ -68,12 +67,11 @@ dependencies {
 
     implementation("com.google.android.material:material:${Versions.material}")
 
-    implementation("com.google.dagger:dagger:${Versions.dagger}")
-    kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
     implementation("com.google.dagger:hilt-android:${Versions.dagger_hilt}")
+    implementation("androidx.hilt:hilt-common:${Versions.AndroidX.dagger_hilt}")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.AndroidX.dagger_hilt}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger_hilt}")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.dagger_hilt_jetpack}")
-    kapt("androidx.hilt:hilt-compiler:${Versions.dagger_hilt_jetpack}")
+    kapt("androidx.hilt:hilt-compiler:${Versions.AndroidX.dagger_hilt}")
 
     implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}")
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardview}")
@@ -96,7 +94,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}")
     implementation("androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}")
     implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
-    implementation("androidx.ui:ui-tooling:${Versions.AndroidX.compose}")
+    implementation("androidx.ui:ui-tooling:${Versions.AndroidX.ui}")
     implementation("com.google.android.material:compose-theme-adapter:${Versions.compose_theme_adapter}")
     implementation("dev.chrisbanes.accompanist:accompanist-coil:${Versions.coil}")
 

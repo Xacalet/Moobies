@@ -3,7 +3,7 @@ package com.xacalet.moobies.presentation.components
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -21,8 +21,10 @@ fun ShowSimpleList(
     shows: List<SimpleShowListData>,
     onItemClick: (Long) -> Unit
 ) {
-    LazyColumnFor(items = shows) { item ->
-        ShowSimpleListItem(item, onItemClick)
+    LazyColumn {
+        items(shows) {
+            ShowSimpleListItem(it, onItemClick)
+        }
     }
 }
 

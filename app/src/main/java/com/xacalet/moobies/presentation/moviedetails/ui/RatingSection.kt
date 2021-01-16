@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -82,12 +83,12 @@ fun StarredRatingItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            asset = Icons.Filled.Star,
+            imageVector = Icons.Filled.Star,
             colorFilter = ColorFilter.tint(starColor),
             modifier = Modifier.size(32.dp)
         )
         Text(
-            annotatedString {
+            buildAnnotatedString {
                 withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)) {
                     append(ratingFormatter(rating))
                 }
@@ -112,7 +113,7 @@ fun PendingUserRatingItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            asset = Icons.Outlined.StarOutline,
+            imageVector = Icons.Outlined.StarOutline,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
             modifier = Modifier.size(32.dp)
         )

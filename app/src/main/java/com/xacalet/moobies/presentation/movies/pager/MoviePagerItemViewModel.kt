@@ -1,17 +1,19 @@
 package com.xacalet.moobies.presentation.movies.pager
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
 import com.xacalet.domain.usecase.ToggleWishlistUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class MoviePagerItemViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MoviePagerItemViewModel @Inject constructor(
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,
     private val toggleWishlistUseCase: ToggleWishlistUseCase

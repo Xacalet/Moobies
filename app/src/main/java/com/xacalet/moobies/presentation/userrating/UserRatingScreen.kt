@@ -15,11 +15,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawShadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -96,12 +96,12 @@ fun UserRatingScreenContent(
         sheetBackgroundColor = Gray900,
         sheetContentColor = AmbientContentColor.current
     ) {
-        Box(alignment = Alignment.TopStart) {
+        Box(contentAlignment = Alignment.TopStart) {
             CoilImage(
                 modifier = Modifier.matchParentSize(),
-                request = ImageRequest.Builder(ContextAmbient.current)
+                request = ImageRequest.Builder(AmbientContext.current)
                     .data(data.poserImageUrl ?: "")
-                    .transformations(BlurTransformation(ContextAmbient.current, 8f, 20f))
+                    .transformations(BlurTransformation(AmbientContext.current, 8f, 20f))
                     .build(),
                 contentScale = ContentScale.Crop
             )
@@ -120,7 +120,7 @@ fun UserRatingScreenContent(
                     modifier = Modifier
                         .weight(1F)
                         .fillMaxHeight(),
-                    alignment = Alignment.Center
+                    contentAlignment = Alignment.Center
                 ) {
                     if (stars != null) {
                         Text(
@@ -160,11 +160,11 @@ fun UserRatingScreenContent(
                         Button(
                             onClick = { stars?.let(onRatingChanged) },
                             enabled = stars != null,
-                            colors = ButtonConstants.defaultButtonColors(
+                            colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color.DarkGray,
                                 contentColor = AmbientContentColor.current
                             ),
-                            elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
+                            elevation = ButtonDefaults.elevation(2.dp, 0.dp, 0.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
@@ -177,11 +177,11 @@ fun UserRatingScreenContent(
                             Spacer(Modifier.preferredSize(16.dp))
                             Button(
                                 onClick = { onRatingRemoved() },
-                                colors = ButtonConstants.defaultButtonColors(
+                                colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Color.Transparent,
                                     contentColor = AmbientContentColor.current
                                 ),
-                                elevation = ButtonConstants.defaultElevation(0.dp, 0.dp, 0.dp),
+                                elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                                 modifier = Modifier.wrapContentWidth()
                             ) {
                                 Providers(AmbientContentAlpha provides ContentAlpha.medium) {
@@ -236,7 +236,7 @@ fun UserRatingTopBar(
             Switch(
                 checked = switchState,
                 onCheckedChange = { switchState = !switchState },
-                colors = SwitchConstants.defaultColors(
+                colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colors.primary,
                     uncheckedThumbColor = Color.LightGray,
                     uncheckedTrackColor = Color.LightGray
@@ -261,10 +261,10 @@ fun StarRatingInput(
                 modifier = Modifier
                     .weight(1F)
                     .clickable(onClick = { onRatingChanged(index.toByte()) }),
-                alignment = Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 Image(
-                    asset = Icons.Default.Star,
+                    imageVector = Icons.Default.Star,
                     colorFilter = ColorFilter.tint(
                         if (index <= rating ?: 0) Blue600 else Color.Gray
                     ),
@@ -294,7 +294,7 @@ fun OtherRatedTitlesHeader(
         Text(stringResource(R.string.other_titles_you_rated_x_y, stars, 10))
         Box(
             modifier = Modifier.fillMaxWidth(),
-            alignment = Alignment.CenterEnd
+            contentAlignment = Alignment.CenterEnd
         ) {
             actionButton()
         }
@@ -311,7 +311,7 @@ internal fun BottomSheetContent(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         OtherRatedTitlesHeader(
             stars = stars ?: 0,
-            modifier = Modifier.drawShadow(2.dp)
+            modifier = Modifier.shadow(2.dp)
         ) {
             IconButton(onClick = { sheetState.hide() }) {
                 Icon(Icons.Default.KeyboardArrowDown)
@@ -319,7 +319,7 @@ internal fun BottomSheetContent(
         }
         when (val value = otherTitlesWithSameRating.value) {
             is GetOtherRatedShowsState.Loading -> {
-                Box(Modifier.preferredHeight(64.dp), alignment = Alignment.Center) {
+                Box(Modifier.preferredHeight(64.dp), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
                 }
             }
@@ -327,7 +327,7 @@ internal fun BottomSheetContent(
                 if (value.shows.isEmpty()) {
                     Box(
                         modifier = Modifier.preferredHeight(64.dp),
-                        alignment = Alignment.Center
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(stringResource(R.string.no_other_titles_with_this_rating))
                     }

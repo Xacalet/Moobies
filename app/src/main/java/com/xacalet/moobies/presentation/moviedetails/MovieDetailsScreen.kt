@@ -3,7 +3,6 @@ package com.xacalet.moobies.presentation.moviedetails
 import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
 import androidx.compose.material.Icon
 import androidx.compose.material.ProvideTextStyle
@@ -83,7 +82,9 @@ fun MovieDetailsScreen(
                 RatingSection(movie.voteAverage, movie.voteCount, userRating, onUserRatingClicked)
             }
         }
-        Surface(modifier = Modifier.height(128.dp).padding(top = 64.dp)) { }
+        Surface(modifier = Modifier
+            .height(128.dp)
+            .padding(top = 64.dp)) { }
     }
 }
 
@@ -118,13 +119,12 @@ fun DetailHeader(
         )
         IconButton(
             onClick = { /* TODO */ },
-            icon = { Icon(Icons.Default.MoreVert) },
             modifier = Modifier
                 .constrainAs(button) {
                     end.linkTo(parent.end)
                     top.linkTo(title.top)
                 }
-        )
+        ) { Icon(Icons.Default.MoreVert) }
         Box(
             modifier = Modifier.constrainAs(subtitle) {
                 start.linkTo(parent.start, margin = 16.dp)
@@ -175,7 +175,7 @@ fun DetailOverview(
                         Button(
                             onClick = {},
                             modifier = Modifier.padding(end = 8.dp),
-                            colors = ButtonConstants.defaultOutlinedButtonColors(
+                            colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = MaterialTheme.colors.onSurface
                             ),
                             border = BorderStroke(
@@ -219,13 +219,13 @@ fun WishlistTextButton(
         modifier = modifier.zIndex(0F),
         border = BorderStroke(1.dp, LightBlue700),
         interactionState = interactionState,
-        elevation = ButtonConstants.defaultElevation(2.dp, 0.dp, 0.dp),
+        elevation = ButtonDefaults.elevation(2.dp, 0.dp, 0.dp),
         colors = if (isWishlisted.value) {
-            ButtonConstants.defaultOutlinedButtonColors(
+            ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colors.onSurface
             )
         } else {
-            ButtonConstants.defaultButtonColors(
+            ButtonDefaults.buttonColors(
                 backgroundColor = LightBlue700,
                 contentColor = Color.White
             )
@@ -290,21 +290,5 @@ fun PreviewDetailsScreen() {
             onWishlistToggled = { isWishlisted.value = !isWishlisted.value },
             onUserRatingClicked = {}
         )
-    }
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-fun test() {
-    MoobiesTheme {
-        Surface {
-            Text(
-                text = "This is just a test 2",
-                modifier = Modifier.padding(12.dp)
-            )
-        }
     }
 }
