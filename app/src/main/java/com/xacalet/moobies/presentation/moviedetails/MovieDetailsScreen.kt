@@ -1,18 +1,45 @@
 package com.xacalet.moobies.presentation.moviedetails
 
 import android.content.res.Configuration
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Interaction
+import androidx.compose.foundation.InteractionState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.Dimension
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.AmbientContentAlpha
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
 import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,10 +47,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.ui.tooling.preview.Devices
-import androidx.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.navigate
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
@@ -35,7 +64,40 @@ import java.time.LocalDate
 
 @Composable
 fun MovieDetailsScreen(
-    movie: MovieDetails,
+    movieId: Long,
+    navController: NavController?,
+    viewModel: MovieDetailsViewModel
+) {
+    Surface(elevation = 2.dp) {
+        // Once movie details have been retrieved, provide path to create URLs for poster and
+        // backdrop images.
+        viewModel.details.observeAsState().value?.let { movieDetails ->
+            // TODO: Get dimensions later.
+            movieDetails.posterPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                viewModel.setPosterImageParams(200, path)
+            }
+            // TODO: Get dimensions later.
+            movieDetails.backdropPath.takeIf { !it.isNullOrBlank() }?.let { path ->
+                viewModel.setBackdropImageParams(1000, path)
+            }
+            MovieDetailsScreen(
+                movieDetails = movieDetails,
+                backdropImageUrl = viewModel.backdropUrlImage.observeAsState(),
+                posterImageUrl = viewModel.posterUrlImage.observeAsState(),
+                isWishlisted = viewModel.isWishlisted.observeAsState(false),
+                userRating = viewModel.userRating.observeAsState(),
+                onWishlistToggled = { viewModel.toggleWishlist() },
+                onUserRatingClicked = {
+                    navController?.navigate("userRating/$movieId")
+                }
+            )
+        } ?: CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
+    }
+}
+
+@Composable
+fun MovieDetailsScreen(
+    movieDetails: MovieDetails,
     backdropImageUrl: State<String?>,
     posterImageUrl: State<String?>,
     isWishlisted: State<Boolean>,
@@ -43,48 +105,51 @@ fun MovieDetailsScreen(
     onWishlistToggled: () -> Unit,
     onUserRatingClicked: () -> Unit
 ) {
-    ScrollableColumn {
-        Surface(elevation = 2.dp) {
-            Column(modifier = Modifier.padding(bottom = 32.dp)) {
-                DetailHeader(
-                    titleText = movie.title ?: "",
-                    imageUrl = backdropImageUrl.value
-                ) {
-                    Row {
-                        ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
-                                Text(movie.releaseDate?.year?.toString() ?: "")
-                                val runtime = movie.runtime.let {
-                                    "${it.div(60)}h ${it % 60}min"
-                                }
-                                Text(runtime, Modifier.padding(start = 8.dp))
+    rememberScrollState(0f)
+    LazyColumn(modifier = Modifier.padding(bottom = 32.dp)) {
+        // use `item` for separate elements like headers
+        // and `items` for lists of identical elements
+        item {
+            DetailHeader(
+                titleText = movieDetails.title ?: "",
+                imageUrl = backdropImageUrl.value
+            ) {
+                Row {
+                    ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
+                        Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+                            Text(movieDetails.releaseDate?.year?.toString() ?: "")
+                            val runtime = movieDetails.runtime.let {
+                                "${it.div(60)}h ${it % 60}min"
                             }
+                            Text(runtime, Modifier.padding(start = 8.dp))
                         }
-
                     }
+
                 }
-                Divider(modifier = Modifier.padding(top = 16.dp))
-                DetailOverview(
-                    posterImageUrl.value,
-                    movie.genres.map { it.name },
-                    movie.overview ?: ""
-                )
-                Divider(modifier = Modifier.padding(top = 16.dp))
-                // Button wishlist
-                WishlistTextButton(
-                    isWishlisted = isWishlisted,
-                    onWishlistToggled = onWishlistToggled,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 32.dp)
-                )
-                Divider(modifier = Modifier.padding(top = 16.dp, bottom = 12.dp))
-                RatingSection(movie.voteAverage, movie.voteCount, userRating, onUserRatingClicked)
             }
+            Divider(modifier = Modifier.padding(top = 16.dp))
+            DetailOverview(
+                posterImageUrl.value,
+                movieDetails.genres.map { it.name },
+                movieDetails.overview ?: ""
+            )
+            Divider(modifier = Modifier.padding(top = 16.dp))
+            // Button wishlist
+            WishlistTextButton(
+                isWishlisted = isWishlisted,
+                onWishlistToggled = onWishlistToggled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 32.dp)
+            )
+            Divider(modifier = Modifier.padding(top = 16.dp, bottom = 12.dp))
+            RatingSection(
+                movieDetails.voteAverage,
+                movieDetails.voteCount,
+                userRating,
+                onUserRatingClicked
+            )
         }
-        Surface(modifier = Modifier
-            .height(128.dp)
-            .padding(top = 64.dp)) { }
     }
 }
 
@@ -98,6 +163,7 @@ fun DetailHeader(
         val (image, title, subtitle, button) = createRefs()
         CoilImage(
             data = imageUrl ?: "",
+            contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .height(220.dp)
@@ -124,7 +190,12 @@ fun DetailHeader(
                     end.linkTo(parent.end)
                     top.linkTo(title.top)
                 }
-        ) { Icon(Icons.Default.MoreVert) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null
+            )
+        }
         Box(
             modifier = Modifier.constrainAs(subtitle) {
                 start.linkTo(parent.start, margin = 16.dp)
@@ -151,6 +222,7 @@ fun DetailOverview(
             val (image, genreList) = createRefs()
             CoilImage(
                 data = imageUrl ?: "",
+                contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(120.dp)
@@ -170,24 +242,29 @@ fun DetailOverview(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                ScrollableRow {
-                    buttonTexts.forEach { text ->
-                        Button(
-                            onClick = {},
-                            modifier = Modifier.padding(end = 8.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colors.onSurface
-                            ),
-                            border = BorderStroke(
-                                1.dp,
-                                MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
-                            )
-                        ) {
-                            Text(
-                                text = text,
-                                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp),
-                                style = MaterialTheme.typography.button.copy(fontWeight = FontWeight.Light)
-                            )
+                rememberScrollState(0f)
+                LazyRow {
+                    // use `item` for separate elements like headers
+                    // and `items` for lists of identical elements
+                    item {
+                        buttonTexts.forEach { text ->
+                            Button(
+                                onClick = {},
+                                modifier = Modifier.padding(end = 8.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = MaterialTheme.colors.onSurface
+                                ),
+                                border = BorderStroke(
+                                    1.dp,
+                                    MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+                                )
+                            ) {
+                                Text(
+                                    text = text,
+                                    modifier = Modifier.padding(top = 2.dp, bottom = 2.dp),
+                                    style = MaterialTheme.typography.button.copy(fontWeight = FontWeight.Light)
+                                )
+                            }
                         }
                     }
                 }
@@ -237,7 +314,10 @@ fun WishlistTextButton(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(if (isWishlisted.value) Icons.Default.Check else Icons.Default.Add)
+            Icon(
+                imageVector = if (isWishlisted.value) Icons.Default.Check else Icons.Default.Add,
+                contentDescription = null
+            )
             Text(
                 stringResource(if (isWishlisted.value) R.string.added_to_wishlist else R.string.add_to_wishlist),
                 Modifier.padding(start = 16.dp),
@@ -251,20 +331,20 @@ fun WishlistTextButton(
 @Preview(
     name = "Detail screen in Default",
     showBackground = true,
-    showDecoration = true,
+    showSystemUi = true,
     device = Devices.PIXEL_3A
 )
 @Preview(
     name = "Detail screen in Spanish",
     showBackground = true,
-    showDecoration = true,
+    showSystemUi = true,
     locale = "es",
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 fun PreviewDetailsScreen() {
     MoobiesTheme {
 
-        val movie = MovieDetails(
+        val movieDetails = MovieDetails(
             id = 0,
             backdropPath = "",
             posterPath = "",
@@ -282,7 +362,7 @@ fun PreviewDetailsScreen() {
         val posterImageUrl: State<String?> = remember { mutableStateOf("") }
         val userRating: State<Byte?> = remember { mutableStateOf(6) }
         MovieDetailsScreen(
-            movie = movie,
+            movieDetails = movieDetails,
             backdropImageUrl = backdropImageUrl,
             posterImageUrl = posterImageUrl,
             isWishlisted = isWishlisted,

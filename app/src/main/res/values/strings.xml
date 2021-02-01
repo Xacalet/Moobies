@@ -16,4 +16,6 @@
     <string name="remove_rating">Remove rating</string>
     <string name="other_titles_you_rated_x_y">Other titles you rated %1$d/%2$d</string>
     <string name="no_other_titles_with_this_rating">No other titles with this rating.</string>
+    <string name="rating_saved">Rating saved</string>
+    <string name="rating_removed">Rating removed</string>
 </resources>

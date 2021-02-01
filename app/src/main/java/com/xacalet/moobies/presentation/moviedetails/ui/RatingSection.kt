@@ -84,6 +84,7 @@ fun StarredRatingItem(
     ) {
         Image(
             imageVector = Icons.Filled.Star,
+            contentDescription = null,
             colorFilter = ColorFilter.tint(starColor),
             modifier = Modifier.size(32.dp)
         )
@@ -114,6 +115,7 @@ fun PendingUserRatingItem(
     ) {
         Image(
             imageVector = Icons.Outlined.StarOutline,
+            contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
             modifier = Modifier.size(32.dp)
         )

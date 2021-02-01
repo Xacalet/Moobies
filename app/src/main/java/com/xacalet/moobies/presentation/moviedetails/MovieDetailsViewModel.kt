@@ -1,10 +1,20 @@
 package com.xacalet.moobies.presentation.moviedetails
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.xacalet.domain.model.MovieDetails
-import com.xacalet.domain.usecase.*
+import com.xacalet.domain.usecase.GetImageUrlUseCase
+import com.xacalet.domain.usecase.GetMovieDetailsUseCase
+import com.xacalet.domain.usecase.GetUserRatingFlowUseCase
+import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
+import com.xacalet.domain.usecase.ToggleWishlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -26,7 +36,6 @@ class MovieDetailsViewModel @Inject constructor(
     private val _backdropFilePath = MutableLiveData<String>()
     private val _addedToWishList = MutableLiveData<Boolean>()
 
-    @ExperimentalCoroutinesApi
     private val _toggledWishlist: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
     private val _details: LiveData<MovieDetails> = _id.switchMap { id ->
@@ -45,7 +54,6 @@ class MovieDetailsViewModel @Inject constructor(
         getUserRatingFlowUseCase(id).asLiveData()
     }
 
-    @ExperimentalCoroutinesApi
     val toggledWishlist: Flow<Boolean?>
         get() = _toggledWishlist
 
@@ -86,7 +94,6 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    @ExperimentalCoroutinesApi
     fun toggleWishlist() {
         _id.value?.let { id ->
             viewModelScope.launch {

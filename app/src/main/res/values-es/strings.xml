@@ -16,4 +16,6 @@
     <string name="remove_rating">Eliminar calificación</string>
     <string name="other_titles_you_rated_x_y">Otros títulos a los que has calificado con %1$d/%2$d</string>
     <string name="no_other_titles_with_this_rating">No hay otros títulos con esta puntuación.</string>
+    <string name="rating_saved">Calificación guardada</string>
+    <string name="rating_removed">Calificación eliminada</string>
 </resources>

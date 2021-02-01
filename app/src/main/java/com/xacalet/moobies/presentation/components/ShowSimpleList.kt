@@ -22,8 +22,8 @@ fun ShowSimpleList(
     onItemClick: (Long) -> Unit
 ) {
     LazyColumn {
-        items(shows) {
-            ShowSimpleListItem(it, onItemClick)
+        items(shows.size) { index ->
+            ShowSimpleListItem(shows[index], onItemClick)
         }
     }
 }
@@ -43,6 +43,7 @@ fun ShowSimpleListItem(
             ) {
                 CoilImage(
                     data = show.imageUrl,
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .preferredWidth(54.dp)
