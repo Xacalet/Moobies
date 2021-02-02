@@ -69,6 +69,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:${Versions.dagger_hilt}")
     implementation("androidx.hilt:hilt-common:${Versions.AndroidX.dagger_hilt}")
+    implementation("androidx.hilt:hilt-navigation:${Versions.AndroidX.dagger_hilt}")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Versions.AndroidX.dagger_hilt}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger_hilt}")
     kapt("androidx.hilt:hilt-compiler:${Versions.AndroidX.dagger_hilt}")
@@ -80,6 +81,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}")
+    implementation("androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}")
     implementation("androidx.paging:paging-runtime:${Versions.AndroidX.paging}")
     implementation("androidx.room:room-ktx:${Versions.AndroidX.room}")

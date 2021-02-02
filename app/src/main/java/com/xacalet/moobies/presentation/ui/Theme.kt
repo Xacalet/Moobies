@@ -10,8 +10,7 @@ import com.google.android.material.composethemeadapter.createMdcTheme
 fun MoobiesTheme(
     content: @Composable () -> Unit
 ) {
-    val context = AmbientContext.current
-    val (colors, type, shapes) = createMdcTheme(context)
+    val (colors, _, shapes) = createMdcTheme(AmbientContext.current)
     MaterialTheme(
         colors = colors ?: MaterialTheme.colors,
         typography = MoobiesTypography,

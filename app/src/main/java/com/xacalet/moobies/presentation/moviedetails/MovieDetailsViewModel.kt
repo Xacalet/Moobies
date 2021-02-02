@@ -15,7 +15,6 @@ import com.xacalet.domain.usecase.GetUserRatingFlowUseCase
 import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
 import com.xacalet.domain.usecase.ToggleWishlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +33,6 @@ class MovieDetailsViewModel @Inject constructor(
     private val _posterFilePath = MutableLiveData<String>()
     private val _backdropImageWidth = MutableLiveData<Int>()
     private val _backdropFilePath = MutableLiveData<String>()
-    private val _addedToWishList = MutableLiveData<Boolean>()
 
     private val _toggledWishlist: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
@@ -53,9 +51,6 @@ class MovieDetailsViewModel @Inject constructor(
     val userRating: LiveData<Byte?> = _id.switchMap { id ->
         getUserRatingFlowUseCase(id).asLiveData()
     }
-
-    val toggledWishlist: Flow<Boolean?>
-        get() = _toggledWishlist
 
     init {
         listOf(_posterImageWidth, _posterFilePath).forEach { source ->
