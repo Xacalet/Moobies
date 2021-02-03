@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.viewModel
@@ -18,13 +19,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.navArgs
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.userrating.UserRatingScreen
-import com.xacalet.moobies.presentation.userrating.UserRatingViewModel
+import com.xacalet.moobies.presentation.userrating.UserRatingViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
 
     private val args: MovieDetailsFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var userRatingViewModelFactory: UserRatingViewModelFactory
 
     @ExperimentalMaterialApi
     override fun onCreateView(
@@ -33,41 +38,37 @@ class MovieDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(context = requireContext()).apply {
         setContent {
-            MoobiesTheme {
-                val navController = rememberNavController()
-                NavHost(navController, startDestination = "movieDetails/{movieId}") {
-                    composable(
-                        route = "movieDetails/{movieId}",
-                        arguments = listOf(navArgument("movieId") {
-                            type = NavType.LongType
-                            defaultValue = args.movieId
-                        })
-                    ) { backstackEntry ->
-                        backstackEntry.arguments?.getLong("movieId")?.let { movieId ->
-                            val viewModel: MovieDetailsViewModel = viewModel(
-                                factory = HiltViewModelFactory(
-                                    AmbientContext.current,
-                                    backstackEntry
-                                )
-                            )
-                            viewModel.setId(movieId)
-                            MovieDetailsScreen(movieId, navController, viewModel)
-                        }
+            ScreenContent()
+        }
+    }
+
+    @ExperimentalMaterialApi
+    @Composable
+    private fun ScreenContent() {
+        MoobiesTheme {
+            val navController = rememberNavController()
+            NavHost(navController, startDestination = "movieDetails/{movieId}") {
+                composable(
+                    route = "movieDetails/{movieId}",
+                    arguments = listOf(navArgument("movieId") {
+                        type = NavType.LongType
+                        defaultValue = args.movieId
+                    })
+                ) { backstackEntry ->
+                    backstackEntry.arguments?.getLong("movieId")?.let { movieId ->
+                        val factory = HiltViewModelFactory(AmbientContext.current, backstackEntry)
+                        val viewModel: MovieDetailsViewModel = viewModel(factory = factory)
+                        viewModel.setId(movieId)
+                        MovieDetailsScreen(movieId, navController, viewModel)
                     }
-                    composable(
-                        route = "userRating/{movieId}",
-                        arguments = listOf(navArgument("movieId") { type = NavType.LongType })
-                    ) { backstackEntry ->
-                        backstackEntry.arguments?.getLong("movieId")?.let { showId ->
-                            val viewModel: UserRatingViewModel = viewModel(
-                                factory = HiltViewModelFactory(
-                                    AmbientContext.current,
-                                    backstackEntry
-                                )
-                            )
-                            viewModel.setId(showId)
-                            UserRatingScreen(showId, navController, viewModel)
-                        }
+                }
+                composable(
+                    route = "userRating/{showId}",
+                    arguments = listOf(navArgument("showId") { type = NavType.LongType })
+                ) { backstackEntry ->
+                    backstackEntry.arguments?.getLong("showId")?.let { showId ->
+                        val viewModel = userRatingViewModelFactory.create(showId)
+                        UserRatingScreen(showId, navController, viewModel)
                     }
                 }
             }
