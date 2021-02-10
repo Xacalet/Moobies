@@ -8,6 +8,6 @@ class AddUserRatingUseCase @Inject constructor(
     private val userRatingRepository: UserRatingRepository
 ) {
 
-    suspend operator fun invoke(id: Long, stars: Byte) =
+    suspend operator fun invoke(id: Long, stars: Int) =
         userRatingRepository.addUserRating(id, stars)
 }

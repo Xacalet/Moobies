@@ -9,7 +9,7 @@ object Versions {
     const val junit = "4.13"
     const val lottie = "3.4.1"
     const val material = "1.2.0"
-    const val mockk = "1.10.2"
+    const val mockk = "1.10.0" //Wait for issue to be merged: https://github.com/mockk/mockk/pull/562
     const val retrofit = "2.9.0"
     object AndroidX {
         const val appcompat = "1.2.0"

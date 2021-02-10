@@ -9,7 +9,7 @@ class GetUserRatingUseCase @Inject constructor(
     private val userRatingRepository: UserRatingRepository
 ) {
 
-    suspend operator fun invoke(id: Long): Byte? =
+    suspend operator fun invoke(id: Long): Int? =
         withContext(Dispatchers.IO) {
             userRatingRepository.getUserRating(id)
         }

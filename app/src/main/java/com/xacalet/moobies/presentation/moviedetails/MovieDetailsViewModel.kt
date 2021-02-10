@@ -48,7 +48,7 @@ class MovieDetailsViewModel @Inject constructor(
     val isWishlisted: LiveData<Boolean> = _id.switchMap { id ->
         isWishlistedFlowUseCase(id).asLiveData()
     }
-    val userRating: LiveData<Byte?> = _id.switchMap { id ->
+    val userRating: LiveData<Int?> = _id.switchMap { id ->
         getUserRatingFlowUseCase(id).asLiveData()
     }
 

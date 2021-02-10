@@ -1,9 +1,7 @@
 package com.xacalet.moobies.presentation.userrating
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.preferredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -42,7 +39,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -57,7 +53,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.stringResource
@@ -66,12 +61,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-
 import coil.request.ImageRequest
 import coil.transform.BlurTransformation
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
-import com.xacalet.moobies.presentation.ui.Blue600
+import com.xacalet.moobies.presentation.components.StarRatingInput
 import com.xacalet.moobies.presentation.ui.Gray800
 import com.xacalet.moobies.presentation.ui.Gray900
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
@@ -128,10 +122,10 @@ fun UserRatingScreen(
 fun UserRatingScreenContent(
     data: UserRatingUiModel,
     onBack: () -> Unit,
-    onRatingChanged: (Byte) -> Unit,
+    onRatingChanged: (Int) -> Unit,
     onRatingRemoved: () -> Unit,
     otherShowsRated: State<GetOtherRatedShowsState>,
-    onBottomSheetExpanded: (Byte) -> Unit
+    onBottomSheetExpanded: (Int) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val (stars, onStarsChanged) = remember { mutableStateOf(data.stars) }
@@ -309,42 +303,11 @@ fun UserRatingTopBar(
     }
 }
 
-@Composable
-fun StarRatingInput(
-    rating: Byte?,
-    onRatingChanged: (Byte?) -> Unit,
-    starCount: Int = 10,
-) {
-    Row(
-        modifier = Modifier.height(40.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        (1..starCount).forEach { index ->
-            Box(
-                modifier = Modifier
-                    .weight(1F)
-                    .clickable(onClick = { onRatingChanged(index.toByte()) }),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(
-                        if (index <= rating ?: 0) Blue600 else Color.Gray
-                    ),
-                    modifier = Modifier.size(
-                        if (index <= rating ?: 0) 32.dp else 24.dp
-                    )
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun OtherRatedTitlesHeader(
     modifier: Modifier = Modifier,
-    stars: Byte,
+    stars: Int,
     actionButton: @Composable BoxScope.() -> Unit
 ) {
     Row(
@@ -369,7 +332,7 @@ fun OtherRatedTitlesHeader(
 @Composable
 internal fun BottomSheetContent(
     sheetState: ModalBottomSheetState,
-    stars: Byte?,
+    stars: Int?,
     otherTitlesWithSameRating: State<GetOtherRatedShowsState>
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -406,6 +369,9 @@ internal fun BottomSheetContent(
     }
 }
 
+private fun close(navController: NavController) {
+    navController.popBackStack()
+}
 
 @ExperimentalMaterialApi
 @Composable
@@ -426,15 +392,4 @@ fun PreviewUserRatingScreen() {
             )
         }
     }
-}
-
-private fun close(navController: NavController) {
-    navController.popBackStack()
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewStarRatingInput() {
-    val (rating, onRatingChanged) = remember { mutableStateOf<Byte?>(null) }
-    StarRatingInput(rating, onRatingChanged)
 }

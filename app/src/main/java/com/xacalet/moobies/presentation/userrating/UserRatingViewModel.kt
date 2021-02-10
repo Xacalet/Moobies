@@ -75,7 +75,7 @@ class UserRatingViewModel @AssistedInject constructor(
         }
     }
 
-    fun onRatingChanged(stars: Byte) {
+    fun onRatingChanged(stars: Int) {
         viewModelScope.launch(ioDispatcher) {
             _isLoading.postValue(true)
             addUserRatingUseCase(id, stars)
@@ -93,7 +93,7 @@ class UserRatingViewModel @AssistedInject constructor(
         }
     }
 
-    fun fetchOtherRatedShows(id: Long, rating: Byte, posterWidth: Int) {
+    fun fetchOtherRatedShows(id: Long, rating: Int, posterWidth: Int) {
         // TODO: This seems to be executing more times than expected.
         viewModelScope.launch(ioDispatcher) {
             _otherRatedShows.postValue(GetOtherRatedShowsState.Loading)

@@ -10,7 +10,7 @@ class UserRatingDataSourceImpl @Inject constructor(
     private val userRatingDao: UserRatingDao
 ) : UserRatingDataSource {
 
-    override suspend fun addUserRating(showId: Long, stars: Byte) {
+    override suspend fun addUserRating(showId: Long, stars: Int) {
         userRatingDao.insert(UserRatingDbModel(showId, stars))
     }
 
@@ -18,10 +18,10 @@ class UserRatingDataSourceImpl @Inject constructor(
         userRatingDao.delete(id)
     }
 
-    override fun getUserRatingFlow(id: Long): Flow<Byte?> = userRatingDao.getByIdFlow(id)
+    override fun getUserRatingFlow(id: Long): Flow<Int?> = userRatingDao.getByIdFlow(id)
 
-    override suspend fun getUserRating(id: Long): Byte? = userRatingDao.getById(id)
+    override suspend fun getUserRating(id: Long): Int? = userRatingDao.getById(id)
 
-    override suspend fun getTitlesByRating(rating: Byte): List<Long> =
+    override suspend fun getTitlesByRating(rating: Int): List<Long> =
         userRatingDao.getByRating(rating)
 }

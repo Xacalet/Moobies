@@ -2,6 +2,8 @@ package com.xacalet.moobies.testutils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.xacalet.moobies.testutils.LiveDataTestUtil.getOrAwaitValue
+import kotlinx.coroutines.delay
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -49,5 +51,19 @@ object LiveDataTestUtil {
 
         @Suppress("UNCHECKED_CAST")
         return data as T
+    }
+
+    /**
+     * Get the value from a LiveData object. We're waiting for LiveData to emit, for 2 seconds.
+     * Once we got a notification via onChanged, we stop observing.
+     */
+    fun <T> LiveData<T>.observeWithTimeout(
+        timeoutInMillis: Long = 1000,
+        onChanged: (T) -> Unit
+    ) {
+        val observer = Observer<T> { o -> onChanged(o) }
+        this.observeForever(observer)
+        Thread.sleep(timeoutInMillis)
+        this.removeObserver(observer)
     }
 }

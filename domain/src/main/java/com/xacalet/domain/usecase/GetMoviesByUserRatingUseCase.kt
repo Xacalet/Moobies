@@ -17,7 +17,7 @@ class GetMoviesByUserRatingUseCase @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
 
-    suspend operator fun invoke(userRating: Byte): List<MovieDetails> =
+    suspend operator fun invoke(userRating: Int): List<MovieDetails> =
         withContext(ioDispatcher) {
             userRatingRepository.getTitlesByRating(userRating).map { id ->
                 async { movieRepository.getMovieDetails(id) }

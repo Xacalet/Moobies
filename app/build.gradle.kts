@@ -43,12 +43,17 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check")
+        useIR = true
     }
 
     composeOptions {
-        kotlinCompilerVersion = Versions.kotlin
         kotlinCompilerExtensionVersion = Versions.AndroidX.compose
+    }
+
+    // This was failing for tests (also seen in compose official samples).
+    packagingOptions {
+        excludes += "/META-INF/AL2.0"
+        excludes += "/META-INF/LGPL2.1"
     }
 }
 
@@ -110,6 +115,9 @@ dependencies {
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("junit:junit:${Versions.junit}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
+    androidTestImplementation("androidx.compose.ui:ui-test:${Versions.AndroidX.compose}")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.AndroidX.compose}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.test_ext}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.test_espresso}")
+    androidTestImplementation("io.mockk:mockk-android:${Versions.mockk}")
 }

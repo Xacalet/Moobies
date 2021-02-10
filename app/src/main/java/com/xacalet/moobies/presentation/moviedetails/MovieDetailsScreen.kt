@@ -101,7 +101,7 @@ fun MovieDetailsScreen(
     backdropImageUrl: State<String?>,
     posterImageUrl: State<String?>,
     isWishlisted: State<Boolean>,
-    userRating: State<Byte?>,
+    userRating: State<Int?>,
     onWishlistToggled: () -> Unit,
     onUserRatingClicked: () -> Unit
 ) {
@@ -360,7 +360,7 @@ fun PreviewDetailsScreen() {
         val isWishlisted = remember { mutableStateOf(true) }
         val backdropImageUrl: State<String?> = remember { mutableStateOf("") }
         val posterImageUrl: State<String?> = remember { mutableStateOf("") }
-        val userRating: State<Byte?> = remember { mutableStateOf(6) }
+        val userRating: State<Int?> = remember { mutableStateOf(6) }
         MovieDetailsScreen(
             movieDetails = movieDetails,
             backdropImageUrl = backdropImageUrl,

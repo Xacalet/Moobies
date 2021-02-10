@@ -45,7 +45,7 @@ import kotlin.random.Random
 fun RatingSection(
     voteAverage: Double,
     voteCount: Int,
-    userRating: State<Byte?>,
+    userRating: State<Int?>,
     onUserRatingClick: () -> Unit = {}
 ) {
     Surface {
@@ -138,9 +138,9 @@ fun PendingUserRatingItem(
 @Composable
 @Preview(name = "With user rating", showBackground = true)
 fun PreviewReviewZoneWithUserRating() {
-    val stars: MutableState<Byte?> = remember { mutableStateOf(6) }
+    val stars: MutableState<Int?> = remember { mutableStateOf(6) }
     val onClick = {
-        stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
+        stars.value = if (stars.value == null) Random.nextInt(1, 10) else null
     }
     RatingSection(6.3, 1031, stars, onClick)
 }
@@ -153,9 +153,9 @@ fun PreviewReviewZoneWithUserRating() {
 )
 fun PreviewReviewZoneWithoutUserRating() {
     MoobiesTheme {
-        val stars: MutableState<Byte?> = remember { mutableStateOf(null) }
+        val stars: MutableState<Int?> = remember { mutableStateOf(null) }
         val onClick = {
-            stars.value = if (stars.value == null) Random.nextInt(1, 10).toByte() else null
+            stars.value = if (stars.value == null) Random.nextInt(1, 10) else null
         }
         RatingSection(6.3, 1031, stars, onClick)
     }

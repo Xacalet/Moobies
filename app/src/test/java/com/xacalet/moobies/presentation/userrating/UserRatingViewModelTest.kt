@@ -1,13 +1,25 @@
 package com.xacalet.moobies.presentation.userrating
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xacalet.domain.usecase.*
+import com.xacalet.domain.usecase.AddUserRatingUseCase
+import com.xacalet.domain.usecase.DeleteUserRatingUseCase
+import com.xacalet.domain.usecase.GetImageUrlUseCase
+import com.xacalet.domain.usecase.GetMovieDetailsUseCase
+import com.xacalet.domain.usecase.GetMoviesByUserRatingUseCase
+import com.xacalet.domain.usecase.GetUserRatingUseCase
 import com.xacalet.moobies.presentation.components.SimpleShowListData
 import com.xacalet.moobies.presentation.userrating.GetOtherRatedShowsState.Loading
 import com.xacalet.moobies.presentation.userrating.GetOtherRatedShowsState.Result
 import com.xacalet.moobies.testutils.LiveDataTestUtil.getOrAwaitValue
-import io.mockk.*
+import com.xacalet.moobies.testutils.LiveDataTestUtil.observeWithTimeout
+import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerifySequence
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -43,7 +55,7 @@ class UserRatingViewModelTest {
     @MockK
     private lateinit var getMoviesByUserRatingUseCase: GetMoviesByUserRatingUseCase
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -51,6 +63,7 @@ class UserRatingViewModelTest {
         Dispatchers.setMain(Dispatchers.Unconfined)
 
         userRatingViewModel = UserRatingViewModel(
+            id = 42L,
             getMovieDetailsUseCase = getMovieDetailsUseCase,
             getImageUrlUseCase = getImageUrlUseCase,
             getUserRatingUseCase = getUserRatingUseCase,
@@ -70,8 +83,6 @@ class UserRatingViewModelTest {
         }
         coEvery { getImageUrlUseCase(any(), "p_42") } returns "http://images/p_42"
         coEvery { getUserRatingUseCase(42L) } returns 8
-
-        userRatingViewModel.setId(42L)
 
         val expectedResult = UserRatingUiModel(
             showId = 42L,
@@ -122,7 +133,6 @@ class UserRatingViewModelTest {
     fun `calling onRatingChanged runs addUserRatingUseCase`() {
         coEvery { addUserRatingUseCase(any(), any()) } just Runs
 
-        userRatingViewModel.setId(42L)
         userRatingViewModel.onRatingChanged(8)
 
         coVerifySequence { addUserRatingUseCase(42L, 8) }
@@ -133,7 +143,6 @@ class UserRatingViewModelTest {
     fun `calling onRatingRemoved runs deleteUserRatingUseCase`() {
         coEvery { deleteUserRatingUseCase(any()) } just Runs
 
-        userRatingViewModel.setId(42L)
         userRatingViewModel.onRatingRemoved()
 
         coVerifySequence { deleteUserRatingUseCase(42L) }

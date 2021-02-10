@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 interface UserRatingDao {
 
     @Query("SELECT stars FROM user_rating WHERE id = :id")
-    fun getByIdFlow(id: Long): Flow<Byte?>
+    fun getByIdFlow(id: Long): Flow<Int?>
 
     @Query("SELECT stars FROM user_rating WHERE id = :id")
-    fun getById(id: Long): Byte?
+    fun getById(id: Long): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(rating: UserRatingDbModel)
@@ -23,5 +23,5 @@ interface UserRatingDao {
     suspend fun delete(id: Long)
 
     @Query("SELECT id FROM user_rating WHERE stars = :rating")
-    fun getByRating(rating: Byte): List<Long>
+    fun getByRating(rating: Int): List<Long>
 }

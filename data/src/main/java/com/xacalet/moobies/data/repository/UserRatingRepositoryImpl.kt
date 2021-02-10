@@ -9,17 +9,17 @@ class UserRatingRepositoryImpl @Inject constructor(
     private val userRatingDataSource: UserRatingDataSource
 ) : UserRatingRepository {
 
-    override suspend fun addUserRating(id: Long, stars: Byte) =
+    override suspend fun addUserRating(id: Long, stars: Int) =
         userRatingDataSource.addUserRating(id, stars)
 
     override suspend fun deleteUserRating(id: Long) =
         userRatingDataSource.deleteUserRating(id)
 
-    override fun getUserRatingFlow(id: Long): Flow<Byte?> =
+    override fun getUserRatingFlow(id: Long): Flow<Int?> =
         userRatingDataSource.getUserRatingFlow(id)
 
-    override suspend fun getUserRating(id: Long): Byte? = userRatingDataSource.getUserRating(id)
+    override suspend fun getUserRating(id: Long): Int? = userRatingDataSource.getUserRating(id)
 
-    override suspend fun getTitlesByRating(rating: Byte): List<Long> =
+    override suspend fun getTitlesByRating(rating: Int): List<Long> =
         userRatingDataSource.getTitlesByRating(rating)
 }
