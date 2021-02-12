@@ -7,8 +7,6 @@ import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ConstraintLayout
-import androidx.compose.foundation.layout.Dimension
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
@@ -26,6 +23,7 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
@@ -51,6 +49,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import com.xacalet.domain.model.Genre
@@ -116,7 +116,7 @@ fun MovieDetailsScreen(
             ) {
                 Row {
                     ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                        Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+                        Providers(LocalContentAlpha provides ContentAlpha.medium) {
                             Text(movieDetails.releaseDate?.year?.toString() ?: "")
                             val runtime = movieDetails.runtime.let {
                                 "${it.div(60)}h ${it % 60}min"

@@ -47,7 +47,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.AndroidX.compose
+        kotlinCompilerExtensionVersion = Versions.Compose.core
     }
 
     // This was failing for tests (also seen in compose official samples).
@@ -94,16 +94,19 @@ dependencies {
     kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
 
     // Jetpack compose
-    implementation("androidx.compose.compiler:compiler:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.foundation:foundation:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.material:material:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.ui:ui:${Versions.AndroidX.compose}")
-    implementation("androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}")
-    implementation("androidx.navigation:navigation-compose:${Versions.AndroidX.navigation_compose}")
-    implementation("com.google.android.material:compose-theme-adapter:${Versions.AndroidX.compose}")
-    implementation("dev.chrisbanes.accompanist:accompanist-coil:${Versions.accompanist}")
+    implementation("androidx.compose.compiler:compiler:${Versions.Compose.core}")
+    implementation("androidx.compose.foundation:foundation:${Versions.Compose.core}")
+    implementation("androidx.compose.material:material:${Versions.Compose.core}")
+    implementation("androidx.compose.material:material-icons-extended:${Versions.Compose.core}")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.Compose.core}")
+    implementation("androidx.compose.ui:ui:${Versions.Compose.core}")
+    implementation("androidx.compose.ui:ui-tooling:${Versions.Compose.core}")
+    implementation("androidx.activity:activity-compose:${Versions.Compose.activity}")
+    implementation("androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.constraintLayout}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.lifecycle_viewModel}")
+    implementation("androidx.navigation:navigation-compose:${Versions.Compose.navigation}")
+    implementation("dev.chrisbanes.accompanist:accompanist-coil:${Versions.Compose.accompanist}")
+    implementation("com.google.android.material:compose-theme-adapter:${Versions.Compose.theme_adapter}")
 
     implementation("com.github.bumptech.glide:glide:${Versions.glide}")
     implementation("com.github.bumptech.glide:recyclerview-integration:${Versions.glide}")
@@ -115,8 +118,8 @@ dependencies {
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("junit:junit:${Versions.junit}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
-    androidTestImplementation("androidx.compose.ui:ui-test:${Versions.AndroidX.compose}")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.AndroidX.compose}")
+    androidTestImplementation("androidx.compose.ui:ui-test:${Versions.Compose.core}")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.Compose.core}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.test_ext}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.test_espresso}")
     androidTestImplementation("io.mockk:mockk-android:${Versions.mockk}")

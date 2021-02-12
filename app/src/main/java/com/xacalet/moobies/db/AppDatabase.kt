@@ -7,7 +7,11 @@ import com.xacalet.moobies.db.dao.WishlistDao
 import com.xacalet.moobies.db.model.UserRatingDbModel
 import com.xacalet.moobies.db.model.WishlistDbModel
 
-@Database(entities = [WishlistDbModel::class, UserRatingDbModel::class], version = 1)
+@Database(
+    entities = [WishlistDbModel::class, UserRatingDbModel::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun wishlistDao(): WishlistDao
 

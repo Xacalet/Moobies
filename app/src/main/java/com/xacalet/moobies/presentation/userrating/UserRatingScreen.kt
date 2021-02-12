@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.AmbientContentAlpha
-import androidx.compose.material.AmbientContentColor
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
@@ -27,6 +25,8 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -54,7 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,13 +83,13 @@ fun UserRatingScreen(
 ) {
     viewModel.onRatingChanged.observeAsState().value?.let {
         val text = stringResource(R.string.rating_saved)
-        Toast.makeText(AmbientContext.current, text, Toast.LENGTH_SHORT).show()
+        Toast.makeText(LocalContext.current, text, Toast.LENGTH_SHORT).show()
         close(navController)
     }
 
     viewModel.onRatingRemoved.observeAsState().value?.let {
         val text = stringResource(R.string.rating_removed)
-        Toast.makeText(AmbientContext.current, text, Toast.LENGTH_SHORT).show()
+        Toast.makeText(LocalContext.current, text, Toast.LENGTH_SHORT).show()
         close(navController)
     }
 
@@ -141,13 +141,13 @@ fun UserRatingScreenContent(
             )
         },
         sheetBackgroundColor = Gray900,
-        sheetContentColor = AmbientContentColor.current
+        sheetContentColor = LocalContentColor.current
     ) {
         Box(contentAlignment = Alignment.TopStart) {
             CoilImage(
-                request = ImageRequest.Builder(AmbientContext.current)
+                request = ImageRequest.Builder(LocalContext.current)
                     .data(data.poserImageUrl ?: "")
-                    .transformations(BlurTransformation(AmbientContext.current, 8f, 20f))
+                    .transformations(BlurTransformation(LocalContext.current, 8f, 20f))
                     .build(),
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
@@ -213,7 +213,7 @@ fun UserRatingScreenContent(
                             enabled = stars != null,
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color.DarkGray,
-                                contentColor = AmbientContentColor.current
+                                contentColor = LocalContentColor.current
                             ),
                             elevation = ButtonDefaults.elevation(2.dp, 0.dp, 0.dp),
                             modifier = Modifier.fillMaxWidth()
@@ -230,12 +230,12 @@ fun UserRatingScreenContent(
                                 onClick = { onRatingRemoved() },
                                 colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Color.Transparent,
-                                    contentColor = AmbientContentColor.current
+                                    contentColor = LocalContentColor.current
                                 ),
                                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                                 modifier = Modifier.wrapContentWidth()
                             ) {
-                                Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+                                Providers(LocalContentAlpha provides ContentAlpha.medium) {
                                     Text(
                                         text = stringResource(R.string.remove_rating).toUpperCase(
                                             Locale.getDefault()
