@@ -2,8 +2,6 @@ package com.xacalet.moobies.presentation.moviedetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Interaction
-import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -33,7 +31,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -105,7 +103,7 @@ fun MovieDetailsScreen(
     onWishlistToggled: () -> Unit,
     onUserRatingClicked: () -> Unit
 ) {
-    rememberScrollState(0f)
+    rememberScrollState(0)
     LazyColumn(modifier = Modifier.padding(bottom = 32.dp)) {
         // use `item` for separate elements like headers
         // and `items` for lists of identical elements
@@ -116,7 +114,7 @@ fun MovieDetailsScreen(
             ) {
                 Row {
                     ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                        Providers(LocalContentAlpha provides ContentAlpha.medium) {
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                             Text(movieDetails.releaseDate?.year?.toString() ?: "")
                             val runtime = movieDetails.runtime.let {
                                 "${it.div(60)}h ${it % 60}min"
@@ -242,7 +240,7 @@ fun DetailOverview(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                rememberScrollState(0f)
+                rememberScrollState(0)
                 LazyRow {
                     // use `item` for separate elements like headers
                     // and `items` for lists of identical elements
@@ -285,17 +283,10 @@ fun WishlistTextButton(
     isWishlisted: State<Boolean>,
     onWishlistToggled: () -> Unit
 ) {
-    val interactionState: InteractionState = remember { InteractionState() }
-    if (isWishlisted.value) {
-        interactionState.addInteraction(Interaction.Pressed)
-    } else {
-        interactionState.removeInteraction(Interaction.Pressed)
-    }
     Button(
         onClick = onWishlistToggled,
         modifier = modifier.zIndex(0F),
         border = BorderStroke(1.dp, LightBlue700),
-        interactionState = interactionState,
         elevation = ButtonDefaults.elevation(2.dp, 0.dp, 0.dp),
         colors = if (isWishlisted.value) {
             ButtonDefaults.outlinedButtonColors(

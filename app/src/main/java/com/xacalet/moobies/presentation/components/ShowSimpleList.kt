@@ -46,8 +46,8 @@ fun ShowSimpleListItem(
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .preferredWidth(54.dp)
-                        .preferredHeight(80.dp)
+                        .width(54.dp)
+                        .height(80.dp)
                 )
                 Column(
                     modifier = Modifier

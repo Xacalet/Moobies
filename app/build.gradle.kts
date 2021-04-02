@@ -49,12 +49,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.Compose.core
     }
-
-    // This was failing for tests (also seen in compose official samples).
-    packagingOptions {
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
-    }
 }
 
 dependencies {
@@ -62,6 +56,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":net"))
     implementation(project(":utils"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}") {
         because("Required for using Time API if minimum Android SDK is below 26")

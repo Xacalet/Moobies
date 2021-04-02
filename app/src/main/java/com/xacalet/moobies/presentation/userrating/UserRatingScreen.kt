@@ -13,8 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -42,12 +41,13 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,6 +71,7 @@ import com.xacalet.moobies.presentation.ui.Gray900
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.verticalGradientBackground
 import dev.chrisbanes.accompanist.coil.CoilImage
+import kotlinx.coroutines.launch
 import java.util.*
 
 // TODO: Add transitions when they get available for compose-navigation
@@ -201,11 +202,11 @@ fun UserRatingScreenContent(
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(Modifier.preferredSize(16.dp))
+                    Spacer(Modifier.size(16.dp))
 
                     StarRatingInput(rating = stars, onRatingChanged = onStarsChanged)
 
-                    Spacer(Modifier.preferredSize(16.dp))
+                    Spacer(Modifier.size(16.dp))
 
                     ProvideTextStyle(value = MaterialTheme.typography.subtitle1) {
                         Button(
@@ -225,7 +226,7 @@ fun UserRatingScreenContent(
                         }
 
                         if (data.stars != null) {
-                            Spacer(Modifier.preferredSize(16.dp))
+                            Spacer(Modifier.size(16.dp))
                             Button(
                                 onClick = { onRatingRemoved() },
                                 colors = ButtonDefaults.buttonColors(
@@ -235,7 +236,7 @@ fun UserRatingScreenContent(
                                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                                 modifier = Modifier.wrapContentWidth()
                             ) {
-                                Providers(LocalContentAlpha provides ContentAlpha.medium) {
+                                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                                     Text(
                                         text = stringResource(R.string.remove_rating).toUpperCase(
                                             Locale.getDefault()
@@ -249,11 +250,12 @@ fun UserRatingScreenContent(
                 }
             }
             if (stars != null) {
+                val coroutineScope = rememberCoroutineScope()
                 OtherRatedTitlesHeader(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     stars = stars
                 ) {
-                    IconButton(onClick = { sheetState.show() }) {
+                    IconButton(onClick = { coroutineScope.launch { sheetState.show() } }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowUp,
                             contentDescription = null
@@ -289,7 +291,7 @@ fun UserRatingTopBar(
         ) {
             var switchState by remember { mutableStateOf(false) }
             Text(stringResource(R.string.share_rating))
-            Spacer(modifier = Modifier.preferredSize(16.dp))
+            Spacer(modifier = Modifier.size(16.dp))
             Switch(
                 checked = switchState,
                 onCheckedChange = { switchState = !switchState },
@@ -313,7 +315,7 @@ fun OtherRatedTitlesHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .preferredHeight(50.dp)
+            .height(50.dp)
             .background(Gray800)
             .padding(start = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -335,12 +337,13 @@ internal fun BottomSheetContent(
     stars: Int?,
     otherTitlesWithSameRating: State<GetOtherRatedShowsState>
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         OtherRatedTitlesHeader(
             stars = stars ?: 0,
             modifier = Modifier.shadow(2.dp)
         ) {
-            IconButton(onClick = { sheetState.hide() }) {
+            IconButton(onClick = { coroutineScope.launch { sheetState.hide() } }) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = null
@@ -349,14 +352,14 @@ internal fun BottomSheetContent(
         }
         when (val value = otherTitlesWithSameRating.value) {
             is GetOtherRatedShowsState.Loading -> {
-                Box(Modifier.preferredHeight(64.dp), contentAlignment = Alignment.Center) {
+                Box(Modifier.height(64.dp), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
                 }
             }
             is GetOtherRatedShowsState.Result -> {
                 if (value.shows.isEmpty()) {
                     Box(
-                        modifier = Modifier.preferredHeight(64.dp),
+                        modifier = Modifier.height(64.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(stringResource(R.string.no_other_titles_with_this_rating))
