@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import com.xacalet.domain.model.Genre
@@ -63,9 +64,10 @@ import java.time.LocalDate
 @Composable
 fun MovieDetailsScreen(
     movieId: Long,
-    navController: NavController?,
-    viewModel: MovieDetailsViewModel
+    navController: NavController?
 ) {
+    val viewModel = hiltNavGraphViewModel<MovieDetailsViewModel>()
+    viewModel.setId(movieId)
     Surface(elevation = 2.dp) {
         // Once movie details have been retrieved, provide path to create URLs for poster and
         // backdrop images.

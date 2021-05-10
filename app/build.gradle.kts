@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
 
     defaultConfig {
         applicationId = "com.xacalet.moobies"
-        minSdkVersion(24)
-        targetSdkVersion(30)
+        minSdk = 24
+        targetSdk = 30
         versionCode = 1
         versionName = "1.0"
 
@@ -97,8 +97,9 @@ dependencies {
     implementation("androidx.compose.ui:ui:${Versions.Compose.core}")
     implementation("androidx.compose.ui:ui-tooling:${Versions.Compose.core}")
     implementation("androidx.activity:activity-compose:${Versions.Compose.activity}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Versions.Compose.hilt_navigation_compose}")
     implementation("androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.constraintLayout}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.lifecycle_viewModel}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.lifecycle_viewmodel}")
     implementation("androidx.navigation:navigation-compose:${Versions.Compose.navigation}")
     implementation("dev.chrisbanes.accompanist:accompanist-coil:${Versions.Compose.accompanist}")
     implementation("com.google.android.material:compose-theme-adapter:${Versions.Compose.theme_adapter}")

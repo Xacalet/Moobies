@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.4.31"
+    const val kotlin = "1.4.32"
     const val kotlin_coroutines = "1.4.2"
     const val dagger = "2.31"
     const val dagger_hilt = "2.31-alpha"
@@ -12,13 +12,14 @@ object Versions {
     const val retrofit = "2.9.0"
 
     object Compose {
-        const val core = "1.0.0-beta02"
-        const val activity = "1.3.0-alpha04"
-        const val constraintLayout = "1.0.0-alpha03"
-        const val lifecycle_viewModel = "1.0.0-alpha03"
-        const val navigation = "1.0.0-alpha08"
-        const val accompanist = "0.6.0"
-        const val theme_adapter = "1.0.0-beta01"
+        const val core = "1.0.0-beta06"
+        const val activity = "1.3.0-alpha07"
+        const val constraintLayout = "1.0.0-alpha06"
+        const val lifecycle_viewmodel = "1.0.0-alpha04"
+        const val navigation = "1.0.0-alpha10"
+        const val hilt_navigation_compose = "1.0.0-alpha01"
+        const val accompanist = "0.6.2"
+        const val theme_adapter = "1.0.0-beta06"
     }
 
     object AndroidX {

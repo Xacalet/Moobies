@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
-import androidx.hilt.navigation.HiltViewModelFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -56,10 +53,7 @@ class MovieDetailsFragment : Fragment() {
                     })
                 ) { backstackEntry ->
                     backstackEntry.arguments?.getLong("movieId")?.let { movieId ->
-                        val factory = HiltViewModelFactory(LocalContext.current, backstackEntry)
-                        val viewModel: MovieDetailsViewModel = viewModel(factory = factory)
-                        viewModel.setId(movieId)
-                        MovieDetailsScreen(movieId, navController, viewModel)
+                        MovieDetailsScreen(movieId, navController)
                     }
                 }
                 composable(
