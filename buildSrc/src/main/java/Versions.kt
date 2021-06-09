@@ -1,8 +1,8 @@
 object Versions {
     const val kotlin = "1.4.32"
     const val kotlin_coroutines = "1.4.2"
-    const val dagger = "2.31"
-    const val dagger_hilt = "2.31-alpha"
+    const val dagger = "2.36"
+    const val dagger_hilt = "2.36"
     const val glide = "4.11.0"
     const val java_desugar = "1.0.10"
     const val junit = "4.13"
