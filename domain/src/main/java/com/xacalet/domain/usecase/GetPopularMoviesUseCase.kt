@@ -14,4 +14,9 @@ class GetPopularMoviesUseCase @Inject constructor(private val repository: MovieR
         withContext(Dispatchers.IO) {
             repository.getPopularMovies(page)
         }
+
+    suspend operator fun invoke(): List<Movie> =
+        withContext(Dispatchers.IO) {
+            repository.getPopularMovies(1).results
+        }
 }

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="inner_card_side_padding">16dp</dimen>
-    <dimen name="left_margin_first_element_list">16dp</dimen>
-    <dimen name="right_padding_list_elements">4dp</dimen>
-</resources>

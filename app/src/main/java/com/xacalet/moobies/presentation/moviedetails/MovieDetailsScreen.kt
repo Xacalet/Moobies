@@ -2,40 +2,18 @@ package com.xacalet.moobies.presentation.moviedetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.State
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,25 +27,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
+import com.google.accompanist.coil.rememberCoilPainter
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
-import dev.chrisbanes.accompanist.coil.CoilImage
 import java.time.LocalDate
 
 @Composable
 fun MovieDetailsScreen(
-    movieId: Long,
-    navController: NavController?
+    viewModel: MovieDetailsViewModel,
+    openShowRating: () -> Unit
 ) {
-    val viewModel = hiltNavGraphViewModel<MovieDetailsViewModel>()
-    viewModel.setId(movieId)
     Surface(elevation = 2.dp) {
         // Once movie details have been retrieved, provide path to create URLs for poster and
         // backdrop images.
@@ -87,16 +60,16 @@ fun MovieDetailsScreen(
                 isWishlisted = viewModel.isWishlisted.observeAsState(false),
                 userRating = viewModel.userRating.observeAsState(),
                 onWishlistToggled = { viewModel.toggleWishlist() },
-                onUserRatingClicked = {
-                    navController?.navigate("userRating/$movieId")
-                }
+                onUserRatingClicked = openShowRating
             )
-        } ?: CircularProgressIndicator(Modifier.wrapContentSize(Alignment.Center))
+        } ?: Box(Modifier.fillMaxSize()) {
+            CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
     }
 }
 
 @Composable
-fun MovieDetailsScreen(
+private fun MovieDetailsScreen(
     movieDetails: MovieDetails,
     backdropImageUrl: State<String?>,
     posterImageUrl: State<String?>,
@@ -161,8 +134,8 @@ fun DetailHeader(
 ) {
     ConstraintLayout {
         val (image, title, subtitle, button) = createRefs()
-        CoilImage(
-            data = imageUrl ?: "",
+        Image(
+            painter = rememberCoilPainter(imageUrl ?: ""),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
@@ -220,8 +193,8 @@ fun DetailOverview(
                 .fillMaxWidth()
         ) {
             val (image, genreList) = createRefs()
-            CoilImage(
-                data = imageUrl ?: "",
+            Image(
+                painter = rememberCoilPainter(imageUrl ?: ""),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

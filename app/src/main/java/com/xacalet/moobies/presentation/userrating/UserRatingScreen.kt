@@ -1,54 +1,16 @@
 package com.xacalet.moobies.presentation.userrating
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Surface
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -59,10 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import coil.request.ImageRequest
 import coil.transform.BlurTransformation
+import com.google.accompanist.coil.rememberCoilPainter
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.components.StarRatingInput
@@ -70,28 +30,25 @@ import com.xacalet.moobies.presentation.ui.Gray800
 import com.xacalet.moobies.presentation.ui.Gray900
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.verticalGradientBackground
-import dev.chrisbanes.accompanist.coil.CoilImage
 import kotlinx.coroutines.launch
-import java.util.*
 
 // TODO: Add transitions when they get available for compose-navigation
 @ExperimentalMaterialApi
 @Composable
 fun UserRatingScreen(
-    showId: Long,
-    navController: NavHostController,
     viewModel: UserRatingViewModel,
+    close: () -> Unit
 ) {
     viewModel.onRatingChanged.observeAsState().value?.let {
         val text = stringResource(R.string.rating_saved)
         Toast.makeText(LocalContext.current, text, Toast.LENGTH_SHORT).show()
-        close(navController)
+        close()
     }
 
     viewModel.onRatingRemoved.observeAsState().value?.let {
         val text = stringResource(R.string.rating_removed)
         Toast.makeText(LocalContext.current, text, Toast.LENGTH_SHORT).show()
-        close(navController)
+        close()
     }
 
     Surface(
@@ -101,12 +58,12 @@ fun UserRatingScreen(
         viewModel.data.observeAsState().value?.let {
             UserRatingScreenContent(
                 it,
-                { close(navController) },
+                { close() },
                 onRatingChanged = { stars -> viewModel.onRatingChanged(stars) },
                 onRatingRemoved = { viewModel.onRatingRemoved() },
                 viewModel.otherRatedShows.observeAsState(GetOtherRatedShowsState.Loading),
                 onBottomSheetExpanded = { rating ->
-                    viewModel.fetchOtherRatedShows(showId, rating, 100)
+                    viewModel.fetchOtherRatedShows(rating, 100)
                 }
             )
         }
@@ -145,11 +102,14 @@ fun UserRatingScreenContent(
         sheetContentColor = LocalContentColor.current
     ) {
         Box(contentAlignment = Alignment.TopStart) {
-            CoilImage(
-                request = ImageRequest.Builder(LocalContext.current)
-                    .data(data.poserImageUrl ?: "")
-                    .transformations(BlurTransformation(LocalContext.current, 8f, 20f))
-                    .build(),
+            val context = LocalContext.current
+            Image(
+                painter = rememberCoilPainter(
+                    request = data.poserImageUrl ?: "",
+                    requestBuilder = {
+                        transformations(BlurTransformation(context, 8f, 20f))
+                    },
+                ),
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop
@@ -177,8 +137,8 @@ fun UserRatingScreenContent(
                             style = MaterialTheme.typography.h1
                         )
                     } else {
-                        CoilImage(
-                            data = data.poserImageUrl ?: "",
+                        Image(
+                            painter = rememberCoilPainter(data.poserImageUrl),
                             contentDescription = null,
                             modifier = Modifier
                                 .width(180.dp)
@@ -220,7 +180,7 @@ fun UserRatingScreenContent(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = stringResource(R.string.rate).toUpperCase(Locale.getDefault()),
+                                text = stringResource(R.string.rate).uppercase(),
                                 style = MaterialTheme.typography.subtitle1
                             )
                         }
@@ -238,9 +198,7 @@ fun UserRatingScreenContent(
                             ) {
                                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                                     Text(
-                                        text = stringResource(R.string.remove_rating).toUpperCase(
-                                            Locale.getDefault()
-                                        ),
+                                        text = stringResource(R.string.remove_rating).uppercase(),
                                         style = MaterialTheme.typography.subtitle1
                                     )
                                 }
@@ -370,10 +328,6 @@ internal fun BottomSheetContent(
             }
         }
     }
-}
-
-private fun close(navController: NavController) {
-    navController.popBackStack()
 }
 
 @ExperimentalMaterialApi
