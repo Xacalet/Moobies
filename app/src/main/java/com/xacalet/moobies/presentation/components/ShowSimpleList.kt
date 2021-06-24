@@ -1,8 +1,14 @@
 package com.xacalet.moobies.presentation.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Surface
@@ -13,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.coil.rememberCoilPainter
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
-import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 fun ShowSimpleList(
@@ -41,8 +47,8 @@ fun ShowSimpleListItem(
                     .clickable(onClick = { onClick(show.id) }),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CoilImage(
-                    data = show.imageUrl,
+                Image(
+                    painter = rememberCoilPainter(show.imageUrl),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

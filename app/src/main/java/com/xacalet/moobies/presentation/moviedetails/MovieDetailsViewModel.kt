@@ -1,13 +1,6 @@
 package com.xacalet.moobies.presentation.moviedetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.domain.usecase.GetImageUrlUseCase
 import com.xacalet.domain.usecase.GetMovieDetailsUseCase
@@ -25,10 +18,11 @@ class MovieDetailsViewModel @Inject constructor(
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,
     private val toggleWishlistUseCase: ToggleWishlistUseCase,
-    private val getUserRatingFlowUseCase: GetUserRatingFlowUseCase
+    private val getUserRatingFlowUseCase: GetUserRatingFlowUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _id = MutableLiveData<Long>()
+    private val _id = MutableLiveData<Long>(savedStateHandle.get("showId"))
     private val _posterImageWidth = MutableLiveData<Int>()
     private val _posterFilePath = MutableLiveData<String>()
     private val _backdropImageWidth = MutableLiveData<Int>()
@@ -80,12 +74,6 @@ class MovieDetailsViewModel @Inject constructor(
         }
         if (_backdropFilePath.value != filePath) {
             _backdropFilePath.value = filePath
-        }
-    }
-
-    fun setId(id: Long) {
-        if (_id.value != id) {
-            _id.value = id
         }
     }
 
