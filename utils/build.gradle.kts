@@ -36,6 +36,6 @@ android {
 
 dependencies {
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}")
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.lifecycle.livedata)
 }

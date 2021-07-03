@@ -7,12 +7,12 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    implementation("com.google.dagger:dagger:${Versions.dagger}")
+    implementation(libs.dagger.dagger)
 
-    api("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
-    api("com.squareup.retrofit2:converter-moshi:${Versions.retrofit}")
+    api(libs.retrofit.retrofit)
+    api(libs.retrofit.moshiConverter)
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
+    implementation(libs.kotlin.stdlib)
 
-    testImplementation("junit:junit:${Versions.junit}")
+    testImplementation(libs.junit)
 }

@@ -44,7 +44,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.Compose.core
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 }
 
@@ -54,56 +54,56 @@ dependencies {
     implementation(project(":net"))
     implementation(project(":utils"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.java_desugar}") {
+    coreLibraryDesugaring(libs.android.desugar) {
         because("Required for using Time API if minimum Android SDK is below 26")
     }
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation("com.google.android.material:material:${Versions.material}")
+    implementation(libs.hilt.library)
+    kapt(libs.hilt.compiler)
 
-    implementation("com.google.dagger:hilt-android:${Versions.dagger}")
-    implementation("androidx.hilt:hilt-common:${Versions.AndroidX.dagger_hilt}")
-    implementation("androidx.hilt:hilt-navigation:${Versions.AndroidX.dagger_hilt}")
-    kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
-    kapt("androidx.hilt:hilt-compiler:${Versions.AndroidX.dagger_hilt}")
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.androidx.hilt.compiler)
 
-    implementation("androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}")
-    implementation("androidx.core:core-ktx:${Versions.AndroidX.core}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}")
-    implementation("androidx.room:room-ktx:${Versions.AndroidX.room}")
-    implementation("androidx.room:room-runtime:${Versions.AndroidX.room}")
-    kapt("androidx.room:room-compiler:${Versions.AndroidX.room}")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 
-    // Jetpack compose
-    implementation("androidx.activity:activity-compose:${Versions.Compose.activity}")
-    implementation("androidx.compose.compiler:compiler:${Versions.Compose.core}")
-    implementation("androidx.compose.foundation:foundation:${Versions.Compose.core}")
-    implementation("androidx.compose.material:material:${Versions.Compose.core}")
-    implementation("androidx.compose.material:material-icons-extended:${Versions.Compose.core}")
-    implementation("androidx.compose.runtime:runtime-livedata:${Versions.Compose.core}")
-    implementation("androidx.compose.ui:ui:${Versions.Compose.core}")
-    implementation("androidx.compose.ui:ui-tooling:${Versions.Compose.core}")
-    implementation("androidx.compose.ui:ui-util:${Versions.Compose.core}")
-    implementation("androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.constraintLayout}")
-    implementation("androidx.hilt:hilt-navigation-compose:${Versions.Compose.hilt_navigation_compose}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.lifecycle_viewmodel}")
-    implementation("androidx.navigation:navigation-compose:${Versions.Compose.navigation}")
-    implementation("androidx.paging:paging-compose:${Versions.Compose.paging}")
-    implementation("com.airbnb.android:lottie-compose:${Versions.Compose.lottie}")
-    implementation("com.google.accompanist:accompanist-coil:${Versions.Compose.accompanist}")
-    implementation("com.google.accompanist:accompanist-pager:${Versions.Compose.accompanist}")
-    implementation("com.google.android.material:compose-theme-adapter:${Versions.Compose.theme_adapter}")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.compose)
 
-    testImplementation("androidx.arch.core:core-testing:${Versions.AndroidX.arch_core}")
-    testImplementation("io.mockk:mockk:${Versions.mockk}")
-    testImplementation("junit:junit:${Versions.junit}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
-    androidTestImplementation("androidx.compose.ui:ui-test:${Versions.Compose.core}")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.Compose.core}")
-    androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.test_ext}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.test_espresso}")
-    androidTestImplementation("io.mockk:mockk-android:${Versions.mockk}")
+    implementation(libs.compose.compiler)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material.library)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.ui.core)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.util)
+
+    implementation(libs.accompanist.coil)
+    implementation(libs.accompanist.pager)
+
+    implementation(libs.mdcAdapter)
+
+    implementation(libs.lottie.compose)
+
+    testImplementation(libs.androidx.archCoreTesting)
+    testImplementation(libs.mockk.library)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.compose.ui.test.library)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.extJunit)
+    androidTestImplementation(libs.androidx.test.espresso)
+    androidTestImplementation(libs.mockk.android)
 }
