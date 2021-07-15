@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 
 @Composable
@@ -48,7 +48,7 @@ fun ShowSimpleListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = rememberCoilPainter(show.imageUrl),
+                    painter = rememberImagePainter(show.imageUrl),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

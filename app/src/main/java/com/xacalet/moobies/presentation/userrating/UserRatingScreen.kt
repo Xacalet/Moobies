@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import coil.transform.BlurTransformation
-import com.google.accompanist.coil.rememberCoilPainter
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.components.StarRatingInput
@@ -104,9 +104,9 @@ fun UserRatingScreenContent(
         Box(contentAlignment = Alignment.TopStart) {
             val context = LocalContext.current
             Image(
-                painter = rememberCoilPainter(
-                    request = data.poserImageUrl ?: "",
-                    requestBuilder = {
+                painter = rememberImagePainter(
+                    data = data.poserImageUrl ?: "",
+                    builder = {
                         transformations(BlurTransformation(context, 8f, 20f))
                     },
                 ),
@@ -138,7 +138,7 @@ fun UserRatingScreenContent(
                         )
                     } else {
                         Image(
-                            painter = rememberCoilPainter(data.poserImageUrl),
+                            painter = rememberImagePainter(data.poserImageUrl),
                             contentDescription = null,
                             modifier = Modifier
                                 .width(180.dp)
