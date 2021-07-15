@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -38,7 +38,7 @@ fun HeaderItem(
 ) {
     Box(modifier) {
         Image(
-            painter = rememberCoilPainter(data.backdropUrl),
+            painter = rememberImagePainter(data.backdropUrl),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier
@@ -61,7 +61,7 @@ fun HeaderItem(
                     .width(120.dp)
             ) {
                 Image(
-                    painter = rememberCoilPainter(data.posterUrl),
+                    painter = rememberImagePainter(data.posterUrl),
                     contentScale = ContentScale.Crop,
                     contentDescription = null
                 )
