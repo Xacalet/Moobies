@@ -24,12 +24,8 @@ import com.xacalet.moobies.presentation.components.CardTitle
 import com.xacalet.moobies.presentation.components.SectionCard
 import com.xacalet.moobies.presentation.components.SectionTitle
 import com.xacalet.moobies.presentation.ui.Yellow600
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 
-
-@ExperimentalCoroutinesApi
-@ExperimentalPagerApi
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
@@ -52,7 +48,6 @@ fun HomeScreen(
     }
 }
 
-@ExperimentalCoroutinesApi
 @Composable
 private fun UpcomingMoviesSection(
     viewModel: HomeScreenViewModel,
@@ -75,9 +70,8 @@ private fun UpcomingMoviesSection(
     }
 }
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagerApi
 @Composable
+@OptIn(ExperimentalPagerApi::class)
 private fun PopularMoviesSection(
     popularShowsDataState: StateFlow<PopularShowsDataState>,
     toggleWishlist: (Long) -> Unit,
@@ -137,7 +131,7 @@ fun BoxScope.PagerLoading() {
  * Workaround to built-in's PagerScope.calculateCurrentOffsetForPage not working when transitioning
  * between first and last page when infinite loop mode is activated.
  */
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 fun PagerScope.calculateCurrentOffsetForPage(page: Int, pageCount: Int): Float {
     return if ((page > currentPage + 1) && (currentPageOffset > 0))
         (currentPage + currentPageOffset) - page + pageCount

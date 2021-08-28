@@ -3,14 +3,12 @@ package com.xacalet.moobies
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.xacalet.moobies.presentation.home.HomeScreen
 import com.xacalet.moobies.presentation.home.HomeScreenViewModel
 import com.xacalet.moobies.presentation.moviedetails.MovieDetailsScreen
@@ -19,11 +17,7 @@ import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.userrating.UserRatingScreen
 import com.xacalet.moobies.presentation.userrating.UserRatingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalMaterialApi
-@ExperimentalCoroutinesApi
-@ExperimentalPagerApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -62,7 +56,14 @@ class MainActivity : ComponentActivity() {
                         val userRatingViewModel: UserRatingViewModel = hiltViewModel()
                         UserRatingScreen(
                             viewModel = userRatingViewModel,
-                            close = { navController.popBackStack() }
+                            close = {
+                                val previousRoute = navController.previousBackStackEntry?.destination?.route
+                                if (previousRoute != null) {
+                                    navController.popBackStack("movieDetails/{showId}", false)
+                                } else {
+                                    navController.popBackStack()
+                                }
+                            }
                         )
                     }
                 }

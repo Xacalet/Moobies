@@ -32,8 +32,6 @@ import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.verticalGradientBackground
 import kotlinx.coroutines.launch
 
-// TODO: Add transitions when they get available for compose-navigation
-@ExperimentalMaterialApi
 @Composable
 fun UserRatingScreen(
     viewModel: UserRatingViewModel,
@@ -75,7 +73,7 @@ fun UserRatingScreen(
     }
 }
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserRatingScreenContent(
     data: UserRatingUiModel,

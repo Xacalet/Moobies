@@ -38,7 +38,6 @@ import com.xacalet.moobies.presentation.ui.Blue400
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.Yellow600
 import java.text.NumberFormat
-import java.util.*
 import kotlin.random.Random
 
 @Composable
@@ -129,7 +128,7 @@ fun PendingUserRatingItem(
             modifier = Modifier.size(32.dp)
         )
         Text(
-            text = stringResource(R.string.rate_this).toUpperCase(Locale.getDefault()),
+            text = stringResource(R.string.rate_this).uppercase(),
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
         )
     }
