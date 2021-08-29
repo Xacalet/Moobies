@@ -14,7 +14,6 @@ import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
 import com.xacalet.domain.usecase.ToggleWishlistUseCase
 import com.xacalet.moobies.presentation.movielist.PopularMoviePager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,7 +83,6 @@ class HomeScreenViewModel @Inject constructor(
         }
     }.cachedIn(viewModelScope)
 
-    @ExperimentalCoroutinesApi
     fun toggleWishlist(id: Long) {
         viewModelScope.launch {
             toggleWishlistUseCase(id)

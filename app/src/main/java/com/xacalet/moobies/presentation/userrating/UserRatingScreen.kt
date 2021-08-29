@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import coil.transform.BlurTransformation
-import com.google.accompanist.coil.rememberCoilPainter
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.components.StarRatingInput
@@ -32,8 +32,6 @@ import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.verticalGradientBackground
 import kotlinx.coroutines.launch
 
-// TODO: Add transitions when they get available for compose-navigation
-@ExperimentalMaterialApi
 @Composable
 fun UserRatingScreen(
     viewModel: UserRatingViewModel,
@@ -75,7 +73,7 @@ fun UserRatingScreen(
     }
 }
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserRatingScreenContent(
     data: UserRatingUiModel,
@@ -104,9 +102,9 @@ fun UserRatingScreenContent(
         Box(contentAlignment = Alignment.TopStart) {
             val context = LocalContext.current
             Image(
-                painter = rememberCoilPainter(
-                    request = data.poserImageUrl ?: "",
-                    requestBuilder = {
+                painter = rememberImagePainter(
+                    data = data.poserImageUrl ?: "",
+                    builder = {
                         transformations(BlurTransformation(context, 8f, 20f))
                     },
                 ),
@@ -138,7 +136,7 @@ fun UserRatingScreenContent(
                         )
                     } else {
                         Image(
-                            painter = rememberCoilPainter(data.poserImageUrl),
+                            painter = rememberImagePainter(data.poserImageUrl),
                             contentDescription = null,
                             modifier = Modifier
                                 .width(180.dp)

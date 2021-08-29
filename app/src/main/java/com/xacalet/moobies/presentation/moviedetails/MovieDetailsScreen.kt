@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
@@ -135,7 +135,7 @@ fun DetailHeader(
     ConstraintLayout {
         val (image, title, subtitle, button) = createRefs()
         Image(
-            painter = rememberCoilPainter(imageUrl ?: ""),
+            painter = rememberImagePainter(imageUrl ?: ""),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
@@ -194,7 +194,7 @@ fun DetailOverview(
         ) {
             val (image, genreList) = createRefs()
             Image(
-                painter = rememberCoilPainter(imageUrl ?: ""),
+                painter = rememberImagePainter(imageUrl ?: ""),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

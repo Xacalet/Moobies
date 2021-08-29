@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.SecondaryText
 import com.xacalet.moobies.presentation.ui.Yellow600
@@ -49,7 +49,7 @@ fun ShowItem(
             Column {
                 CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.caption) {
                     Image(
-                        painter = rememberCoilPainter(data.posterUrl),
+                        painter = rememberImagePainter(data.posterUrl),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         modifier = Modifier

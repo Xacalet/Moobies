@@ -5,30 +5,27 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieAnimationSpec
-import com.airbnb.lottie.compose.rememberLottieAnimationState
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.compose.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.PagerScope
 import com.google.accompanist.pager.rememberPagerState
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.CardTitle
 import com.xacalet.moobies.presentation.components.SectionCard
 import com.xacalet.moobies.presentation.components.SectionTitle
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.xacalet.moobies.presentation.ui.Yellow600
 import kotlinx.coroutines.flow.StateFlow
 
-
-@ExperimentalCoroutinesApi
-@ExperimentalPagerApi
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
@@ -51,7 +48,6 @@ fun HomeScreen(
     }
 }
 
-@ExperimentalCoroutinesApi
 @Composable
 private fun UpcomingMoviesSection(
     viewModel: HomeScreenViewModel,
@@ -74,36 +70,32 @@ private fun UpcomingMoviesSection(
     }
 }
 
-@ExperimentalCoroutinesApi
-@ExperimentalPagerApi
 @Composable
+@OptIn(ExperimentalPagerApi::class)
 private fun PopularMoviesSection(
     popularShowsDataState: StateFlow<PopularShowsDataState>,
     toggleWishlist: (Long) -> Unit,
     openShowDetail: (Long) -> Unit
 ) {
+    // TODO: Add automatic transition.
     Box(Modifier.height(240.dp)) {
         when (val state = popularShowsDataState.collectAsState().value) {
             is PopularShowsDataState.Error -> {
                 // TODO: Implement Error screen.
             }
             PopularShowsDataState.Loading -> {
-                // TODO: Tint lottie animation in yellow.
-                val animationSpec = remember { LottieAnimationSpec.RawRes(R.raw.loading_animation) }
-                val animationState = rememberLottieAnimationState(autoPlay = true, repeatCount = Integer.MAX_VALUE)
-                LottieAnimation(
-                    animationSpec,
-                    modifier = Modifier.align(Alignment.Center),
-                    animationState,
-                )
+                PagerLoading()
             }
             is PopularShowsDataState.Ready -> {
                 val pagerState = rememberPagerState(
                     pageCount = state.data.count(),
-                    initialOffscreenLimit = 2
+                    initialOffscreenLimit = 1,
+                    infiniteLoop = true
                 )
+                // TODO: Look for options for smoothing transitions.
                 HorizontalPager(pagerState) { page ->
-                    val offset = (-128).dp * calculateCurrentOffsetForPage(page)
+                    val offset =
+                        (-128).dp * calculateCurrentOffsetForPage(page, pagerState.pageCount)
                     HeaderItem(
                         modifier = Modifier.height(240.dp),
                         itemModifier = Modifier.offset(x = offset),
@@ -115,4 +107,38 @@ private fun PopularMoviesSection(
             }
         }
     }
+}
+
+@Composable
+fun BoxScope.PagerLoading() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_animation))
+    val dynamicProperties = rememberLottieDynamicProperties(
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR,
+            value = Yellow600.toArgb(),
+            keyPath = arrayOf("**")
+        ),
+    )
+    LottieAnimation(
+        composition = composition,
+        modifier = Modifier.align(Alignment.Center),
+        iterations = LottieConstants.IterateForever,
+        dynamicProperties = dynamicProperties
+    )
+}
+
+/**
+ * Workaround to built-in's PagerScope.calculateCurrentOffsetForPage not working when transitioning
+ * between first and last page when infinite loop mode is activated.
+ */
+@OptIn(ExperimentalPagerApi::class)
+fun PagerScope.calculateCurrentOffsetForPage(page: Int, pageCount: Int): Float {
+    return if ((page > currentPage + 1) && (currentPageOffset > 0))
+        (currentPage + currentPageOffset) - page + pageCount
+    else if ((currentPage > page + 1) && (currentPageOffset > 0))
+        (currentPage + currentPageOffset) - page - pageCount
+    else if ((currentPage < page) && (currentPageOffset < 0))
+        (currentPage + currentPageOffset) - page + pageCount
+    else
+        (currentPage + currentPageOffset) - page
 }

@@ -41,6 +41,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
     composeOptions {
@@ -81,6 +82,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.paging.compose)
 
+    implementation(libs.coil)
+
     implementation(libs.compose.compiler)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material.library)
@@ -88,9 +91,9 @@ dependencies {
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.toolingPreview)
     implementation(libs.compose.ui.util)
 
-    implementation(libs.accompanist.coil)
     implementation(libs.accompanist.pager)
 
     implementation(libs.mdcAdapter)
