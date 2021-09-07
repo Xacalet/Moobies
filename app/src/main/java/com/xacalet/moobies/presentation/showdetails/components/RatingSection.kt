@@ -1,4 +1,4 @@
-package com.xacalet.moobies.presentation.moviedetails.ui
+package com.xacalet.moobies.presentation.showdetails.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image

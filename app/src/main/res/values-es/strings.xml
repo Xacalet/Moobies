@@ -18,4 +18,8 @@
     <string name="no_other_titles_with_this_rating">No hay otros títulos con esta puntuación.</string>
     <string name="rating_saved">Calificación guardada</string>
     <string name="rating_removed">Calificación eliminada</string>
+    <string name="home_tab">Inicio</string>
+    <string name="search_tab">Buscar</string>
+    <string name="video_tab">Vídeo</string>
+    <string name="account_tab">Usted</string>
 </resources>

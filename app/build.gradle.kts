@@ -95,6 +95,9 @@ dependencies {
     implementation(libs.compose.ui.util)
 
     implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.navigationAnimation)
+
+    implementation(libs.material)
 
     implementation(libs.mdcAdapter)
 

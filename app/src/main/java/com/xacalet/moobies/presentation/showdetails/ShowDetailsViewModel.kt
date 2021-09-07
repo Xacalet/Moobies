@@ -1,19 +1,16 @@
-package com.xacalet.moobies.presentation.moviedetails
+package com.xacalet.moobies.presentation.showdetails
 
 import androidx.lifecycle.*
 import com.xacalet.domain.model.MovieDetails
-import com.xacalet.domain.usecase.GetImageUrlUseCase
-import com.xacalet.domain.usecase.GetMovieDetailsUseCase
-import com.xacalet.domain.usecase.GetUserRatingFlowUseCase
-import com.xacalet.domain.usecase.IsWishlistedFlowUseCase
-import com.xacalet.domain.usecase.ToggleWishlistUseCase
+import com.xacalet.domain.usecase.*
+import com.xacalet.moobies.presentation.navigation.CommonDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieDetailsViewModel @Inject constructor(
+class ShowDetailsViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val isWishlistedFlowUseCase: IsWishlistedFlowUseCase,
@@ -22,7 +19,8 @@ class MovieDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _id = MutableLiveData<Long>(savedStateHandle.get("showId"))
+    private val _id =
+        MutableLiveData<Long>(savedStateHandle.get(CommonDirections.ShowDetails.SHOW_ID))
     private val _posterImageWidth = MutableLiveData<Int>()
     private val _posterFilePath = MutableLiveData<String>()
     private val _backdropImageWidth = MutableLiveData<Int>()
