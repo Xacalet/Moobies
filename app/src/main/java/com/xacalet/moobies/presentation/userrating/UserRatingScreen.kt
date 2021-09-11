@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.BlurTransformation
 import com.xacalet.moobies.R
@@ -73,7 +74,7 @@ fun UserRatingScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
 @Composable
 fun UserRatingScreenContent(
     data: UserRatingUiModel,
@@ -337,12 +338,13 @@ fun PreviewUserRatingScreen() {
             modifier = Modifier.fillMaxSize(),
             contentColor = Color.White
         ) {
+            val otherRatedShowsState = remember { mutableStateOf(GetOtherRatedShowsState.Loading) }
             UserRatingScreenContent(
                 data = UserRatingUiModel(1, "Maze Runner: The Scorch Trials", 7, ""),
                 onBack = {},
                 onRatingChanged = {},
                 onRatingRemoved = {},
-                otherShowsRated = mutableStateOf(GetOtherRatedShowsState.Loading),
+                otherShowsRated = otherRatedShowsState,
                 onBottomSheetExpanded = {}
             )
         }
