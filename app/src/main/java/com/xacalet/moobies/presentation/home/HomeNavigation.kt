@@ -24,14 +24,15 @@ fun NavGraphBuilder.homeNavigation(navController: NavHostController) {
                 }
             )
         }
-        composable(route = CommonDirections.ShowDetails.route, arguments = CommonDirections.ShowDetails.arguments,) {
+        composable(
+            route = CommonDirections.ShowDetails.route,
+            arguments = CommonDirections.ShowDetails.arguments
+        ) {
             MovieDetailsScreen(
                 viewModel = hiltViewModel(),
-                openShowRating = {
+                openShowRating = { showId ->
                     navController.navigate(
-                        CommonDirections.UserRating.createDestination(
-                            it
-                        )
+                        CommonDirections.UserRating.createDestination(showId)
                     )
                 }
             )
