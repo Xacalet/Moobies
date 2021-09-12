@@ -2,6 +2,8 @@ package com.xacalet.moobies.presentation.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,7 +34,8 @@ fun HomeScreen(
     openShowDetail: (Long) -> Unit
 ) {
     Surface {
-        Column {
+        val scrollState = rememberScrollState()
+        Column(Modifier.verticalScroll(scrollState)) {
             PopularMoviesSection(
                 popularShowsDataState = viewModel.popularShowsDataState,
                 toggleWishlist = viewModel::toggleWishlist,

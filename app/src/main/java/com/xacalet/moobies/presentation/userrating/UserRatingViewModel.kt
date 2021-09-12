@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.xacalet.domain.di.IoDispatcher
 import com.xacalet.domain.usecase.*
 import com.xacalet.moobies.presentation.components.SimpleShowListData
+import com.xacalet.moobies.presentation.navigation.CommonDirections
 import com.xacalet.utils.android.lifecycle.MutableSingleLiveEvent
 import com.xacalet.utils.android.lifecycle.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,7 @@ class UserRatingViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    val id: Long = savedStateHandle.get<Long>("showId") ?: -1L
+    val id: Long = savedStateHandle.get<Long>(CommonDirections.UserRating.SHOW_ID) ?: -1L
 
     val data: LiveData<UserRatingUiModel>
 

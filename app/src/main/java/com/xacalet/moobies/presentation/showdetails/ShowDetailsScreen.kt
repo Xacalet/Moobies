@@ -1,12 +1,13 @@
-package com.xacalet.moobies.presentation.moviedetails
+package com.xacalet.moobies.presentation.showdetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,17 +32,17 @@ import coil.compose.rememberImagePainter
 import com.xacalet.domain.model.Genre
 import com.xacalet.domain.model.MovieDetails
 import com.xacalet.moobies.R
-import com.xacalet.moobies.presentation.moviedetails.ui.RatingSection
+import com.xacalet.moobies.presentation.showdetails.components.RatingSection
 import com.xacalet.moobies.presentation.ui.LightBlue700
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import java.time.LocalDate
 
 @Composable
 fun MovieDetailsScreen(
-    viewModel: MovieDetailsViewModel,
-    openShowRating: () -> Unit
+    viewModel: ShowDetailsViewModel,
+    openShowRating: (Long) -> Unit
 ) {
-    Surface(elevation = 2.dp) {
+    Surface {
         // Once movie details have been retrieved, provide path to create URLs for poster and
         // backdrop images.
         viewModel.details.observeAsState().value?.let { movieDetails ->
@@ -60,7 +61,7 @@ fun MovieDetailsScreen(
                 isWishlisted = viewModel.isWishlisted.observeAsState(false),
                 userRating = viewModel.userRating.observeAsState(),
                 onWishlistToggled = { viewModel.toggleWishlist() },
-                onUserRatingClicked = openShowRating
+                onUserRatingClicked = { openShowRating(movieDetails.id) }
             )
         } ?: Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
@@ -78,51 +79,47 @@ private fun MovieDetailsScreen(
     onWishlistToggled: () -> Unit,
     onUserRatingClicked: () -> Unit
 ) {
-    rememberScrollState(0)
-    LazyColumn(modifier = Modifier.padding(bottom = 32.dp)) {
-        // use `item` for separate elements like headers
-        // and `items` for lists of identical elements
-        item {
-            DetailHeader(
-                titleText = movieDetails.title ?: "",
-                imageUrl = backdropImageUrl.value
-            ) {
-                Row {
-                    ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                            Text(movieDetails.releaseDate?.year?.toString() ?: "")
-                            val runtime = movieDetails.runtime.let {
-                                "${it.div(60)}h ${it % 60}min"
-                            }
-                            Text(runtime, Modifier.padding(start = 8.dp))
+    val scrollState = rememberScrollState()
+    Column(Modifier.verticalScroll(scrollState)) {
+        DetailHeader(
+            titleText = movieDetails.title ?: "",
+            imageUrl = backdropImageUrl.value
+        ) {
+            Row {
+                ProvideTextStyle(MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Light)) {
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(movieDetails.releaseDate?.year?.toString() ?: "")
+                        val runtime = movieDetails.runtime.let {
+                            "${it.div(60)}h ${it % 60}min"
                         }
+                        Text(runtime, Modifier.padding(start = 8.dp))
                     }
-
                 }
             }
-            Divider(modifier = Modifier.padding(top = 16.dp))
-            DetailOverview(
-                posterImageUrl.value,
-                movieDetails.genres.map { it.name },
-                movieDetails.overview ?: ""
-            )
-            Divider(modifier = Modifier.padding(top = 16.dp))
-            // Button wishlist
-            WishlistTextButton(
-                isWishlisted = isWishlisted,
-                onWishlistToggled = onWishlistToggled,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 32.dp)
-            )
-            Divider(modifier = Modifier.padding(top = 16.dp, bottom = 12.dp))
-            RatingSection(
-                movieDetails.voteAverage,
-                movieDetails.voteCount,
-                userRating,
-                onUserRatingClicked
-            )
         }
+        Divider(modifier = Modifier.padding(top = 16.dp))
+        DetailOverview(
+            posterImageUrl.value,
+            movieDetails.genres.map { it.name },
+            movieDetails.overview ?: ""
+        )
+        Divider(modifier = Modifier.padding(top = 16.dp))
+        // Button wishlist
+        WishlistTextButton(
+            isWishlisted = isWishlisted,
+            onWishlistToggled = onWishlistToggled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 32.dp)
+        )
+        Divider(modifier = Modifier.padding(top = 16.dp, bottom = 12.dp))
+        RatingSection(
+            movieDetails.voteAverage,
+            movieDetails.voteCount,
+            userRating,
+            onUserRatingClicked
+        )
+        Spacer(modifier = Modifier.size(32.dp))
     }
 }
 
@@ -215,10 +212,8 @@ fun DetailOverview(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                rememberScrollState(0)
-                LazyRow {
-                    // use `item` for separate elements like headers
-                    // and `items` for lists of identical elements
+                val lazyListState = rememberLazyListState()
+                LazyRow(state = lazyListState) {
                     item {
                         buttonTexts.forEach { text ->
                             Button(
@@ -230,7 +225,8 @@ fun DetailOverview(
                                 border = BorderStroke(
                                     1.dp,
                                     MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
-                                )
+                                ),
+                                elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                             ) {
                                 Text(
                                     text = text,

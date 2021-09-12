@@ -18,4 +18,8 @@
     <string name="no_other_titles_with_this_rating">No other titles with this rating.</string>
     <string name="rating_saved">Rating saved</string>
     <string name="rating_removed">Rating removed</string>
+    <string name="home_tab">Home</string>
+    <string name="search_tab">Search</string>
+    <string name="video_tab">Video</string>
+    <string name="account_tab">You</string>
 </resources>
