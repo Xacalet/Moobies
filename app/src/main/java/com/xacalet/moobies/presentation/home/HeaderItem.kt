@@ -18,16 +18,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
 import com.xacalet.moobies.presentation.ui.MoobiesTheme
 import com.xacalet.moobies.presentation.ui.SecondaryText
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HeaderItem(
     modifier: Modifier = Modifier,
@@ -125,12 +126,7 @@ fun HeaderPreview() {
         )
     )
     MoobiesTheme {
-        val pagerState = rememberPagerState(
-            pageCount = 2,
-            initialOffscreenLimit = 2,
-        )
-
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(count = 2) { page ->
             HeaderItem(
                 modifier = Modifier.height(240.dp),
                 itemModifier = Modifier

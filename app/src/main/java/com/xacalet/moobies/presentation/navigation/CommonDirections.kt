@@ -1,7 +1,7 @@
 package com.xacalet.moobies.presentation.navigation
 
 import androidx.navigation.NavType
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 
 object CommonDirections {
 

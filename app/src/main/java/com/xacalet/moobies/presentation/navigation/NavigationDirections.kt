@@ -1,6 +1,7 @@
 package com.xacalet.moobies.presentation.navigation
 
-import androidx.navigation.compose.NamedNavArgument
+import androidx.navigation.NamedNavArgument
+import java.util.Collections.emptyList
 
 abstract class NavigationCommand(
     val route: String,

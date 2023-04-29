@@ -21,7 +21,7 @@ class NetworkModule {
             .addInterceptor { chain ->
                 val request = chain.request()
 
-                val url = request.url().newBuilder()
+                val url = request.url.newBuilder()
                     .addQueryParameter("api_key", apiKey)
                     .build()
 

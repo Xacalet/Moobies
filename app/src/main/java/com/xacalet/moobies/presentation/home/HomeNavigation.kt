@@ -40,8 +40,8 @@ fun NavGraphBuilder.homeNavigation(navController: NavHostController) {
         composable(
             route = CommonDirections.UserRating.route,
             arguments = CommonDirections.UserRating.arguments,
-            enterTransition = { _, _ -> slideInVertically({ 1800 }, tween(700)) },
-            exitTransition = { _, _ -> slideOutVertically({ 1800 }, tween(700)) },
+            enterTransition = { slideInVertically(tween(700)) { 1800 } },
+            exitTransition = { slideOutVertically(tween(700)) { 1800 } },
         ) {
             UserRatingScreen(
                 viewModel = hiltViewModel(),

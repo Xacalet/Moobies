@@ -1,26 +1,26 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.daggerAndroid)
     kotlin("kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 33
+    namespace = "com.xacalet.moobies"
 
     defaultConfig {
         applicationId = "com.xacalet.moobies"
-        minSdk = 24
-        targetSdk = 30
+        minSdk = 21
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -35,22 +35,24 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.get()
+    kotlin {
+        jvmToolchain(17)
     }
 
-    packagingOptions {
-        resources.excludes.add("META-INF/AL2.0")
-        resources.excludes.add("META-INF/LGPL2.1")
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
@@ -59,6 +61,8 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":net"))
     implementation(project(":utils"))
+
+    val composeBom = platform(libs.compose.bom)
 
     coreLibraryDesugaring(libs.android.desugar) {
         because("Required for using Time API if minimum Android SDK is below 26")
@@ -89,6 +93,7 @@ dependencies {
 
     implementation(libs.coil)
 
+    implementation(composeBom)
     implementation(libs.compose.compiler)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material.library)
@@ -104,7 +109,7 @@ dependencies {
 
     implementation(libs.material)
 
-    implementation(libs.mdcAdapter)
+    implementation(libs.composeThemeAdapter)
 
     implementation(libs.lottie.compose)
 
@@ -112,9 +117,9 @@ dependencies {
     testImplementation(libs.mockk.library)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(composeBom)
     androidTestImplementation(libs.compose.ui.test.library)
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.extJunit)
-    androidTestImplementation(libs.androidx.test.espresso)
     androidTestImplementation(libs.mockk.android)
 }

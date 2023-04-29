@@ -21,9 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
-import coil.transform.BlurTransformation
+import coil.compose.rememberAsyncImagePainter
 import com.xacalet.moobies.R
 import com.xacalet.moobies.presentation.components.ShowSimpleList
 import com.xacalet.moobies.presentation.components.StarRatingInput
@@ -74,7 +72,7 @@ fun UserRatingScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserRatingScreenContent(
     data: UserRatingUiModel,
@@ -101,14 +99,8 @@ fun UserRatingScreenContent(
         sheetContentColor = LocalContentColor.current
     ) {
         Box(contentAlignment = Alignment.TopStart) {
-            val context = LocalContext.current
             Image(
-                painter = rememberImagePainter(
-                    data = data.poserImageUrl ?: "",
-                    builder = {
-                        transformations(BlurTransformation(context, 8f, 20f))
-                    },
-                ),
+                painter = rememberAsyncImagePainter(data.poserImageUrl ?: ""),
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop
@@ -137,7 +129,7 @@ fun UserRatingScreenContent(
                         )
                     } else {
                         Image(
-                            painter = rememberImagePainter(data.poserImageUrl),
+                            painter = rememberAsyncImagePainter(data.poserImageUrl),
                             contentDescription = null,
                             modifier = Modifier
                                 .width(180.dp)
